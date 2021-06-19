@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -17,7 +18,7 @@ namespace AudioEngine
         public bool debug;
         
         //The track array member for setting audio in the inspector
-        public AudioTrack[] tracks;
+        public List<AudioTrack> tracks;
         
         [System.Serializable]
         public class AudioTrack

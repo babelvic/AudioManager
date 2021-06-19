@@ -19,9 +19,9 @@ namespace CustomScriptingEngine
         {
             //The asset path for the 
             var assetPath = AssetDatabase.GetAssetPath(Selection.activeObject);
-            var editorFileName = assetPath.Split('/')[assetPath.Split('/').Length - 1].Split('.')[0] + "Editor";
-            Debug.Log($"[{editorFileName}]: Find in <{assetPath}>");
-            
+            var classFileName = assetPath.Split('/')[assetPath.Split('/').Length - 1].Split('.')[0];
+            Debug.Log($"[{classFileName}Editor.cs]: Find in <Assets/Editor>");
+
             //The directory path for the Editor Script Files
             var directoryPath = Path.Combine($"{Application.dataPath}", "Editor");
 
@@ -31,7 +31,7 @@ namespace CustomScriptingEngine
                 //Check if the editor directory path exists / if not create the directory
                 if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);
 
-                var editorFilePath = Path.Combine($"{directoryPath}", $"{editorFileName}.cs");
+                var editorFilePath = Path.Combine($"{directoryPath}", $"{classFileName}Editor.cs");
 
                 if (!File.Exists(editorFilePath))
                 {
@@ -51,17 +51,14 @@ namespace CustomScriptingEngine
             {
                 string editorScriptTemaplate;
                 var dependencies = "using System.Collections;\nusing System.Collections.Generic;\nusing UnityEngine;\nusing UnityEditor;\n";
-                var customEditorSetting = $"\n[CustomEditor(typeof({editorFileName}))]";
-                var editorClassCreation = $"public class {editorFileName} : Editor\n" +
+                var customEditorSetting = $"\n[ExecuteInEditMode]\n[CustomEditor(typeof({classFileName}))]\n";
+                var editorClassCreation = $"public class {classFileName}Editor : Editor\n" +
                                           "{\n" +
-                                          $"     {editorFileName} manager;\n" +
-                                          "     void OnEnable()\n" +
-                                          "     {\n" +
-                                          $"         manager = target as {editorFileName};\n" + 
-                                          "     }\n\n" +
+                                          $"     {classFileName} manager;\n\n" +
                                           "     public override void OnInspectorGUI()\n" +
                                           "     {\n" +
-                                          "         base.OnInspectorGUI();\n" +
+                                          $"         manager = target as {classFileName};\n\n" +
+                                          "         DrawDefaultInspector();\n" +
                                           "     }\n" + 
                                           "\n}";
 

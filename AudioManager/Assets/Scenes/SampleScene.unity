@@ -308,8 +308,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2098241565}
-  - component: {fileID: 2098241566}
   - component: {fileID: 2098241567}
+  - component: {fileID: 2098241566}
   m_Layer: 0
   m_Name: AudioManagement
   m_TagString: Untagged
@@ -440,4 +440,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
-  tracks: []
+  tracks:
+  - name: retro_explosion_bass_10
+    clip: {fileID: 8300000, guid: 9320d6cb53d868c4fa7e6d8ca415130f, type: 3}
+    mixer: {fileID: 0}
+    loop: 0
+    priority: 0
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    h_source: {fileID: 0}
+  - name: CheckPointSound
+    clip: {fileID: 8300000, guid: 243415f23ada68c4487a2e53056f64b2, type: 3}
+    mixer: {fileID: 0}
+    loop: 0
+    priority: 0
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    h_source: {fileID: 0}
+  - name: retro_explosion_deep_02
+    clip: {fileID: 8300000, guid: b999b445cc65fb147a3ba21b3927efb9, type: 3}
+    mixer: {fileID: 0}
+    loop: 0
+    priority: 0
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    h_source: {fileID: 0}
