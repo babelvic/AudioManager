@@ -15,7 +15,7 @@ namespace Editor
         
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            _height = dropdown ? 50 : 100;
+            _height = dropdown ? 100 : 50;
             
             return _height;
         }
@@ -35,21 +35,7 @@ namespace Editor
 
             position.x += 15;
             position.width -= 15;
-
-            /*
-             *
-             * public string name;
-            public AudioClip clip;
-            public AudioMixer mixer;
-
-            public bool loop;
-
-            [Range(0f, 256f)] public float priority;
-            [Range(0f, 1f)] public float volume;
-            [Range(-3f, 3f)] public float pitch;
-            [Range(0f, 1f)] public float spatialBlend;
-             * 
-             */
+            
 
             Rect fieldRect = new Rect(position);
 
@@ -57,34 +43,48 @@ namespace Editor
 
             SerializedProperty nameField = property.FindPropertyRelative(nameof(AudioManager.AudioTrack.name));
 
-            AudioClip oldClip = ((AudioClip) clipField.objectReferenceValue);
-
-            if (clipField.objectReferenceValue.GetType() == typeof(AudioClip) && clipField != null && ((AudioClip) clipField.objectReferenceValue) != oldClip)
+            if (clipField.objectReferenceValue != null)
             {
                 nameField.stringValue = ((AudioClip) clipField.objectReferenceValue).name;
             }
 
-            //Draw Clip
-            EditorGUI.ObjectField(position, clipField);
+            if (dropdown)
+            {
+                Space(ref fieldRect);
+                //Draw Clip
+                EditorGUI.ObjectField(fieldRect, clipField);
             
-            //Draw Name
-            EditorGUI.TextField(position, nameField.stringValue);
+                Space(ref fieldRect);
+                //Draw Name
+                EditorGUI.TextField(fieldRect, nameField.stringValue);
 
-            var mixerField = property.FindPropertyRelative("mixer");
+                var mixerField = property.FindPropertyRelative("mixer");
 
-            var loopField = new PropertyField(property.FindPropertyRelative("loop"), "Loop Track");
+                var loopField = new PropertyField(property.FindPropertyRelative("loop"), "Loop Track");
 
-            SerializedProperty priorityField = property.FindPropertyRelative("priority");
-            SerializedProperty volumeField = property.FindPropertyRelative("volume");
-            SerializedProperty pitchField = property.FindPropertyRelative("pitch");
-            SerializedProperty SpatialBlendField = property.FindPropertyRelative("spatialBlend");
+                EditorGUILayout.BeginVertical("Box");
+                SerializedProperty priorityField = property.FindPropertyRelative("priority");
+                SerializedProperty volumeField = property.FindPropertyRelative("volume");
+                SerializedProperty pitchField = property.FindPropertyRelative("pitch");
+                SerializedProperty SpatialBlendField = property.FindPropertyRelative("spatialBlend");
+                EditorGUILayout.EndHorizontal();
 
-            //Draw Values
-            EditorGUI.Slider(position, priorityField, 0f, 256f);
-            EditorGUI.Slider(position, volumeField, 0f, 1);
-            EditorGUI.Slider(position, pitchField, -3f, 3);
-            EditorGUI.Slider(position, SpatialBlendField, 0f, 1f);
+                Space(ref fieldRect);
+                //Draw Values
+                EditorGUI.Slider(fieldRect, priorityField, 0f, 256f);
+                Space(ref fieldRect);
+                EditorGUI.Slider(fieldRect, volumeField, 0f, 1);
+                Space(ref fieldRect);
+                EditorGUI.Slider(fieldRect, pitchField, -3f, 3);
+                Space(ref fieldRect);
+                EditorGUI.Slider(fieldRect, SpatialBlendField, 0f, 1f);
+            }
 
+        }
+
+        public void Space(ref Rect pos)
+        {
+            pos.y += 30f;
         }
     }
 }

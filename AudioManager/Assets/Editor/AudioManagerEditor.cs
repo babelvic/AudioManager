@@ -62,6 +62,7 @@ public class AudioManagerEditor : UnityEditor.Editor
              //Vertical Space for the specific info of the track list
              using (new EditorGUILayout.VerticalScope())
              {
+                 /*
                  for (int i = 0; i < manager.tracks.Count; i++)
                  {
                      //Vertical Space for serialize all the info of each track in the list
@@ -137,6 +138,12 @@ public class AudioManagerEditor : UnityEditor.Editor
                      }
 
                      DrawUILine(new Color(.1f, .8f, .8f));
+                 }
+                 */
+                 
+                 for (int i = 0; i < s_trackers.Count; i++)
+                 {
+                     EditorGUILayout.PropertyField(s_trackers.ElementAt(i));
                  }
              }
 
