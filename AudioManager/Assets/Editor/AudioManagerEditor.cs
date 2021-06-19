@@ -15,20 +15,12 @@ using UnityEngine.Timeline;
 public class AudioManagerEditor : UnityEditor.Editor
 {
      AudioManager manager;
-
-     private List<SerializedProperty> s_trackers = new List<SerializedProperty>();
+     
      //ReorderableList 
 
      private void OnEnable()
      {
          manager = target as AudioManager;
-
-         for (int i = 0; i < manager.tracks.Count; i++)
-         {
-             SerializedProperty track = serializedObject.FindProperty("tracks").GetArrayElementAtIndex(i);
-             
-             s_trackers.Add(track);
-         }
      }
 
      public override void OnInspectorGUI()
@@ -141,24 +133,15 @@ public class AudioManagerEditor : UnityEditor.Editor
                  }
                  */
                  
-                 for (int i = 0; i < s_trackers.Count; i++)
+                 for (int i = 0; i < manager.tracks.Count; i++)
                  {
-                     EditorGUILayout.PropertyField(s_trackers.ElementAt(i));
+                     var track = serializedObject.FindProperty("tracks").GetArrayElementAtIndex(i);
+                     EditorGUILayout.PropertyField(track);
                  }
              }
 
          }
 
-     }
-
-     public static void DrawUILine(Color color, int thickness = 2, int padding = 10)
-     {
-         Rect r = EditorGUILayout.GetControlRect(GUILayout.Height(padding+thickness));
-         r.height = thickness;
-         r.y+=padding/2;
-         r.x-=2;
-         r.width +=6;
-         EditorGUI.DrawRect(r, color);
      }
 
 }

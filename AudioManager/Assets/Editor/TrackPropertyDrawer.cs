@@ -23,17 +23,17 @@ namespace Editor
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             EditorGUI.BeginProperty(position, label, property);
-            position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
+            //position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
             position.width -= 34;
             position.height = 18;
 
             Rect dropdownRect = new Rect(position);
             dropdownRect.width = 5;
-            dropdownRect.height = 20;
+            dropdownRect.height = 30;
 
             dropdown = EditorGUI.Foldout(dropdownRect, dropdown, String.Empty);
 
-            position.x += 15;
+            position.x += 50;
             position.width -= 15;
             
 
@@ -61,13 +61,11 @@ namespace Editor
                 var mixerField = property.FindPropertyRelative("mixer");
 
                 var loopField = new PropertyField(property.FindPropertyRelative("loop"), "Loop Track");
-
-                EditorGUILayout.BeginVertical("Box");
+                
                 SerializedProperty priorityField = property.FindPropertyRelative("priority");
                 SerializedProperty volumeField = property.FindPropertyRelative("volume");
                 SerializedProperty pitchField = property.FindPropertyRelative("pitch");
                 SerializedProperty SpatialBlendField = property.FindPropertyRelative("spatialBlend");
-                EditorGUILayout.EndHorizontal();
 
                 Space(ref fieldRect);
                 //Draw Values
@@ -78,13 +76,25 @@ namespace Editor
                 EditorGUI.Slider(fieldRect, pitchField, -3f, 3);
                 Space(ref fieldRect);
                 EditorGUI.Slider(fieldRect, SpatialBlendField, 0f, 1f);
+                Space(ref fieldRect);
+                
+                DrawUILine(Color.cyan);
             }
-
         }
 
         public void Space(ref Rect pos)
         {
             pos.y += 30f;
+        }
+        
+        public static void DrawUILine(Color color, int thickness = 2, int padding = 30)
+        {
+            Rect r = EditorGUILayout.GetControlRect(GUILayout.Height(padding+thickness));
+            r.height = thickness;
+            r.y+=padding/2;
+            r.x-=2;
+            r.width +=6;
+            EditorGUI.DrawRect(r, color);
         }
     }
 }
