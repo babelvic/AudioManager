@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Data;
 using AudioEngine;
 using UnityEditor;
 using UnityEngine;
-using AudioEngine;
 using UnityEditor.UIElements;
 
 namespace Editor
@@ -11,11 +11,10 @@ namespace Editor
     public class TrackPropertyDrawer : PropertyDrawer
     {
         private float _height;
-        private bool dropdown;
-        
+
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            _height = dropdown ? 100 : 50;
+            _height = property.isExpanded ? 200 : 50;
             
             return _height;
         }
@@ -28,10 +27,10 @@ namespace Editor
             position.height = 18;
 
             Rect dropdownRect = new Rect(position);
-            dropdownRect.width = 5;
+            dropdownRect.width = 10;
             dropdownRect.height = 30;
 
-            dropdown = EditorGUI.Foldout(dropdownRect, dropdown, String.Empty);
+            property.isExpanded = EditorGUI.Foldout(dropdownRect, property.isExpanded, string.Empty);
 
             position.x += 50;
             position.width -= 15;
@@ -48,12 +47,13 @@ namespace Editor
                 nameField.stringValue = ((AudioClip) clipField.objectReferenceValue).name;
             }
 
-            if (dropdown)
+
+            if (property.isExpanded)
             {
-                Space(ref fieldRect);
+                Space(ref fieldRect, 5f);
                 //Draw Clip
                 EditorGUI.ObjectField(fieldRect, clipField);
-            
+        
                 Space(ref fieldRect);
                 //Draw Name
                 EditorGUI.TextField(fieldRect, nameField.stringValue);
@@ -61,14 +61,14 @@ namespace Editor
                 var mixerField = property.FindPropertyRelative("mixer");
 
                 var loopField = new PropertyField(property.FindPropertyRelative("loop"), "Loop Track");
-                
+            
                 SerializedProperty priorityField = property.FindPropertyRelative("priority");
                 SerializedProperty volumeField = property.FindPropertyRelative("volume");
                 SerializedProperty pitchField = property.FindPropertyRelative("pitch");
                 SerializedProperty SpatialBlendField = property.FindPropertyRelative("spatialBlend");
 
-                Space(ref fieldRect);
                 //Draw Values
+                Space(ref fieldRect);
                 EditorGUI.Slider(fieldRect, priorityField, 0f, 256f);
                 Space(ref fieldRect);
                 EditorGUI.Slider(fieldRect, volumeField, 0f, 1);
@@ -78,23 +78,27 @@ namespace Editor
                 EditorGUI.Slider(fieldRect, SpatialBlendField, 0f, 1f);
                 Space(ref fieldRect);
                 
-                DrawUILine(Color.cyan);
+                DrawUILine(fieldRect.x, fieldRect.y);
+                Space(ref fieldRect);
             }
+
+            EditorGUI.EndProperty();
         }
 
-        public void Space(ref Rect pos)
+        public void Space(ref Rect pos, float space = 30f)
         {
-            pos.y += 30f;
+            pos.y += space;
         }
         
-        public static void DrawUILine(Color color, int thickness = 2, int padding = 30)
+        public static void DrawUILine(float posX, float posY, float thickness = 47, float padding = 30)
         {
-            Rect r = EditorGUILayout.GetControlRect(GUILayout.Height(padding+thickness));
-            r.height = thickness;
-            r.y+=padding/2;
-            r.x-=2;
-            r.width +=6;
-            EditorGUI.DrawRect(r, color);
+            Rect r = new Rect(posX, posY, thickness, padding);
+            r.width = EditorGUIUtility.currentViewWidth;
+            r.height = 2;
+            r.y+=padding * 0.3f;
+            r.x-=78;
+            r.width -= thickness;
+            EditorGUI.DrawRect(r, Color.cyan);
         }
     }
 }
