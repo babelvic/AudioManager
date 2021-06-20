@@ -52,11 +52,11 @@ namespace Editor
             {
                 Space(ref fieldRect, 5f);
                 //Draw Clip
-                EditorGUI.ObjectField(fieldRect, clipField);
+                EditorGUI.PropertyField(fieldRect, clipField);
         
                 Space(ref fieldRect);
                 //Draw Name
-                EditorGUI.TextField(fieldRect, nameField.stringValue);
+                EditorGUI.TextField(fieldRect, "Name" , nameField.stringValue);
 
                 var mixerField = property.FindPropertyRelative("mixer");
 
@@ -90,13 +90,13 @@ namespace Editor
             pos.y += space;
         }
         
-        public static void DrawUILine(float posX, float posY, float thickness = 47, float padding = 30)
+        public static void DrawUILine(float posX, float posY, float thickness = 28, float padding = 30)
         {
             Rect r = new Rect(posX, posY, thickness, padding);
             r.width = EditorGUIUtility.currentViewWidth;
             r.height = 2;
             r.y+=padding * 0.3f;
-            r.x-=78;
+            r.x-=52;
             r.width -= thickness;
             EditorGUI.DrawRect(r, Color.cyan);
         }

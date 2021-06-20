@@ -17,11 +17,14 @@ public class AudioManagerEditor : UnityEditor.Editor
 {
      AudioManager manager;
 
+     private SerializedProperty tracks;
      //ReorderableList 
 
      private void OnEnable()
      {
          manager = target as AudioManager;
+
+         tracks = serializedObject.FindProperty(nameof(manager.tracks));
      }
 
      public override void OnInspectorGUI()
@@ -55,13 +58,20 @@ public class AudioManagerEditor : UnityEditor.Editor
              //Vertical Space for the specific info of the track list
              using (new EditorGUILayout.VerticalScope())
              {
-                 using (new EditorGUILayout.HorizontalScope("Box"))
+                 using (new EditorGUILayout.VerticalScope("Box"))
                  {
                      try
                      {
-                         //var track = serializedObject.FindProperty("tracks").GetArrayElementAtIndex(i);
-                         EditorGUILayout.PropertyField(serializedObject.FindProperty("tracks"));
-                         this.Repaint();
+                         for (int i = 0; i < manager.tracks.Count; i++)
+                         {
+                             serializedObject.Update();
+                             var track = serializedObject.FindProperty("tracks").GetArrayElementAtIndex(i);
+                             EditorGUILayout.PropertyField(track);
+                             serializedObject.ApplyModifiedProperties();
+                         }
+                         // serializedObject.Update();
+                         // EditorGUILayout.PropertyField(tracks);
+                         // serializedObject.ApplyModifiedProperties();
                      }
                      catch (InvalidOperationException e)
                      {
