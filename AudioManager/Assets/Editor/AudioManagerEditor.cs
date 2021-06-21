@@ -20,6 +20,8 @@ public class AudioManagerEditor : UnityEditor.Editor
      private SerializedProperty s_tracks;
 
      private ReorderableList _reorderableTracks;
+     
+     string dropdownLabel;
 
      private void OnEnable()
      {
@@ -28,12 +30,13 @@ public class AudioManagerEditor : UnityEditor.Editor
          s_tracks = serializedObject.FindProperty(nameof(manager.tracks));
 
          _reorderableTracks = new ReorderableList(serializedObject, s_tracks, true, true, false, false);
+         _reorderableTracks.drawHeaderCallback = DrawHeader;
          _reorderableTracks.drawElementCallback = DrawListItems;
          
          _reorderableTracks.elementHeightCallback = delegate(int index) {
              var element = _reorderableTracks.serializedProperty.GetArrayElementAtIndex(index);
              var margin = EditorGUIUtility.standardVerticalSpacing;
-             if (element.isExpanded) return 200 + margin;
+             if (element.isExpanded) return 210 + margin;
              else return 20 + margin;
          };
      }
@@ -60,38 +63,10 @@ public class AudioManagerEditor : UnityEditor.Editor
                  }
              }
 
-             GUIStyle greenStylePreset = new GUIStyle(GUI.skin.label);
-             greenStylePreset.normal.textColor = new Color(.05f, .9f, .2f);
-
-             GUIStyle blueStylePreset = new GUIStyle(GUI.skin.label);
-             blueStylePreset.normal.textColor = new Color(.1f, .6f, .8f);
-
              serializedObject.Update();
              
-             //Vertical Space for the specific info of the track list
-             /*
-             using (new EditorGUILayout.VerticalScope("Box"))
-             {
-                 try
-                 {
-                     for (int i = 0; i < manager.tracks.Count; i++)
-                     {
-                         EditorGUILayout.BeginHorizontal("Box");
-                         var track = _reorderableTracks.serializedProperty.GetArrayElementAtIndex(i);
-                         EditorGUILayout.PropertyField(track);
-                         EditorGUILayout.EndHorizontal();
-                     }
-                 }
-                 catch (InvalidOperationException e)
-                 {
-                     Debug.LogWarning($"Error with the serialization on the track: {e}");
-                 }
-             }
-             */
-             
-             
              _reorderableTracks.DoLayoutList();
-             
+
              serializedObject.ApplyModifiedProperties();
          }
 
@@ -110,8 +85,8 @@ public class AudioManagerEditor : UnityEditor.Editor
         dropdownRect.height = 10;
         dropdownRect.x += 10;
         dropdownRect.y += 5;
-
-        property.isExpanded = EditorGUI.Foldout(dropdownRect, property.isExpanded, string.Empty);
+        
+        property.isExpanded = EditorGUI.Foldout(dropdownRect, property.isExpanded, dropdownLabel);
 
         position.x += 50;
         position.width -= 15;
@@ -128,10 +103,9 @@ public class AudioManagerEditor : UnityEditor.Editor
             nameField.stringValue = ((AudioClip) clipField.objectReferenceValue).name;
         }
 
-
         if (property.isExpanded)
         {
-            Space(ref fieldRect, 5f);
+            Space(ref fieldRect, 20f);
             //Draw Clip
             EditorGUI.PropertyField(fieldRect, clipField);
     
@@ -161,15 +135,55 @@ public class AudioManagerEditor : UnityEditor.Editor
             
             DrawUILine(fieldRect.x, fieldRect.y);
             Space(ref fieldRect);
+            
+            
+            //dropdownLabel = nameField.stringValue != string.Empty ? $"Track: {nameField.stringValue}" : "Default Track";
+        }
+        
+        GetDropdownLabel(index);
+    }
+
+    void GetDropdownLabel(int index)
+    {
+        int i = index;
+
+        i++;
+
+        if (i > _reorderableTracks.count - 1)
+        {
+            i = 0;
+        }
+        
+        SerializedProperty property = _reorderableTracks.serializedProperty.GetArrayElementAtIndex(i);
+
+        if (property.isExpanded)
+        {
+            dropdownLabel = string.Empty;
+        }
+        else
+        {
+            var clipT = property.FindPropertyRelative(nameof(AudioManager.AudioTrack.clip));
+            string clipName = string.Empty;
+            if (clipT.objectReferenceValue != null)
+            {
+                clipName = ((AudioClip) clipT.objectReferenceValue).name;
+                dropdownLabel = clipName != string.Empty ? $"Track: {clipName}" : "Default Track";
+            }
         }
     }
 
+    void DrawHeader(Rect rect)
+    {
+        string name = "Audio Manager Tracks";
+        EditorGUI.LabelField(rect, name);
+    }
+    
     public void Space(ref Rect pos, float space = 30f)
     {
         pos.y += space;
     }
     
-    public static void DrawUILine(float posX, float posY, float thickness = 28, float padding = 30)
+    public static void DrawUILine(float posX, float posY, float thickness = 25, float padding = 30)
     {
         Rect r = new Rect(posX, posY, thickness, padding);
         r.width = EditorGUIUtility.currentViewWidth;
