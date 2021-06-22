@@ -11,6 +11,7 @@ using UnityEditor.PackageManager;
 using UnityEditorInternal;
 using UnityEngine.Audio;
 using UnityEngine.Timeline;
+using UnityEngine.UIElements;
 
 [CustomEditor(typeof(AudioManager))]
 public class AudioManagerEditor : UnityEditor.Editor
@@ -36,7 +37,7 @@ public class AudioManagerEditor : UnityEditor.Editor
          _reorderableTracks.elementHeightCallback = delegate(int index) {
              var element = _reorderableTracks.serializedProperty.GetArrayElementAtIndex(index);
              var margin = EditorGUIUtility.standardVerticalSpacing;
-             if (element.isExpanded) return 210 + margin;
+             if (element.isExpanded) return 230 + margin;
              else return 20 + margin;
          };
      }
@@ -69,7 +70,6 @@ public class AudioManagerEditor : UnityEditor.Editor
 
              serializedObject.ApplyModifiedProperties();
          }
-
      }
      
      
@@ -77,9 +77,12 @@ public class AudioManagerEditor : UnityEditor.Editor
     {
         SerializedProperty property = _reorderableTracks.serializedProperty.GetArrayElementAtIndex(index);
         
+        GUIStyle blueStylePreset = new GUIStyle(GUI.skin.label);
+        blueStylePreset.normal.textColor = new Color(.1f, .6f, .8f);
+        
         position.width -= 34;
         position.height = 18;
-
+        
         Rect dropdownRect = new Rect(position);
         dropdownRect.width = 10;
         dropdownRect.height = 10;
@@ -87,41 +90,42 @@ public class AudioManagerEditor : UnityEditor.Editor
         dropdownRect.y += 5;
         
         property.isExpanded = EditorGUI.Foldout(dropdownRect, property.isExpanded, dropdownLabel);
-
+        
         position.x += 50;
         position.width -= 15;
-
-
+        
+        
         Rect fieldRect = new Rect(position);
-
+        
         SerializedProperty clipField = property.FindPropertyRelative("clip");
-
+        
         SerializedProperty nameField = property.FindPropertyRelative(nameof(AudioManager.AudioTrack.name));
-
+        
         if (clipField.objectReferenceValue != null)
         {
             nameField.stringValue = ((AudioClip) clipField.objectReferenceValue).name;
         }
-
+        
         if (property.isExpanded)
         {
             Space(ref fieldRect, 20f);
             //Draw Clip
             EditorGUI.PropertyField(fieldRect, clipField);
-    
+            
             Space(ref fieldRect);
             //Draw Name
             EditorGUI.TextField(fieldRect, "Name" , nameField.stringValue);
-
+            
             var mixerField = property.FindPropertyRelative("mixer");
-
+            
             var loopField = property.FindPropertyRelative("loop");
-        
+            
             SerializedProperty priorityField = property.FindPropertyRelative("priority");
             SerializedProperty volumeField = property.FindPropertyRelative("volume");
             SerializedProperty pitchField = property.FindPropertyRelative("pitch");
             SerializedProperty SpatialBlendField = property.FindPropertyRelative("spatialBlend");
 
+            var customLabel = new Label("LABEL");
             //Draw Values
             Space(ref fieldRect);
             EditorGUI.Slider(fieldRect, priorityField, 0f, 256f);
@@ -132,12 +136,26 @@ public class AudioManagerEditor : UnityEditor.Editor
             Space(ref fieldRect);
             EditorGUI.Slider(fieldRect, SpatialBlendField, 0f, 1f);
             Space(ref fieldRect);
-            
+
+            Rect buttonRect = new Rect(fieldRect.position, new Vector2(50, fieldRect.height));
+            buttonRect.x += (EditorGUIUtility.currentViewWidth * 0.5f)-buttonRect.x;
+            if (GUI.Button(buttonRect, "-"))
+            {
+                manager.tracks.Remove(manager.tracks.ElementAt(index));
+            }
+            Space(ref fieldRect, 15);
             DrawUILine(fieldRect.x, fieldRect.y);
             Space(ref fieldRect);
-            
-            
-            //dropdownLabel = nameField.stringValue != string.Empty ? $"Track: {nameField.stringValue}" : "Default Track";
+        }
+        else
+        {
+            Rect buttonRect = new Rect(dropdownRect.position, new Vector2(50, 20));
+            buttonRect.y -= 5;
+            buttonRect.x += (EditorGUIUtility.currentViewWidth - (buttonRect.x * 3));
+            if (GUI.Button(buttonRect, "-"))
+            {
+                manager.tracks.Remove(manager.tracks.ElementAt(index));
+            }
         }
         
         GetDropdownLabel(index);
@@ -183,7 +201,7 @@ public class AudioManagerEditor : UnityEditor.Editor
         pos.y += space;
     }
     
-    public static void DrawUILine(float posX, float posY, float thickness = 25, float padding = 30)
+    public static void DrawUILine(float posX, float posY, float thickness = 38, float padding = 30)
     {
         Rect r = new Rect(posX, posY, thickness, padding);
         r.width = EditorGUIUtility.currentViewWidth;
