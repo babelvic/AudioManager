@@ -20,12 +20,15 @@ namespace AudioEngine
         //The track array member for setting audio in the inspector
         public List<AudioTrack> tracks;
         
+        //The mixers of the game project
+        public List<AudioTrackMixer> mixers;
+        
         [System.Serializable]
         public class AudioTrack
         {
             public string name;
             public AudioClip clip;
-            public AudioMixer mixer;
+            public AudioMixerGroup mixer;
 
             public bool loop;
 
@@ -36,6 +39,14 @@ namespace AudioEngine
 
             [HideInInspector] public AudioSource h_source;
             
+        }
+
+        [System.Serializable]
+        public class AudioTrackMixer
+        {
+            public string name;
+            public AudioMixerGroup mixerGroup;
+            public bool dropdownMixer;
         }
 
         #region UnityFunctions

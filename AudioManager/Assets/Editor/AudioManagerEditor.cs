@@ -18,28 +18,40 @@ public class AudioManagerEditor : UnityEditor.Editor
 {
      AudioManager manager;
 
+     private SerializedProperty s_mixers;
      private SerializedProperty s_tracks;
-
+     
      private ReorderableList _reorderableTracks;
      
-     string dropdownLabel;
+     private string dropdownLabelTracks;
+
+     private List<string> mixerGroupPopup = new List<string>();
+     private List<int> mixerIndex = new List<int>();
 
      private void OnEnable()
      {
          manager = target as AudioManager;
 
+         //Properties
          s_tracks = serializedObject.FindProperty(nameof(manager.tracks));
 
+         #region ReorderableListTracks
+
          _reorderableTracks = new ReorderableList(serializedObject, s_tracks, true, true, false, false);
-         _reorderableTracks.drawHeaderCallback = DrawHeader;
-         _reorderableTracks.drawElementCallback = DrawListItems;
-         
+         _reorderableTracks.drawHeaderCallback = DrawHeaderTracks;
+         _reorderableTracks.drawElementCallback = DrawListTracks;
+         _reorderableTracks.drawFooterCallback = DrawFooterTracks;
+         _reorderableTracks.drawNoneElementCallback = DrawBackgroundNoTracks;
+
          _reorderableTracks.elementHeightCallback = delegate(int index) {
              var element = _reorderableTracks.serializedProperty.GetArrayElementAtIndex(index);
              var margin = EditorGUIUtility.standardVerticalSpacing;
-             if (element.isExpanded) return 230 + margin;
+             if (element.isExpanded) return 260 + margin;
              else return 20 + margin;
          };
+         
+         #endregion
+         
      }
 
      public override void OnInspectorGUI()
@@ -47,13 +59,73 @@ public class AudioManagerEditor : UnityEditor.Editor
          //Vertical Space for the Audio Manager
          using (new EditorGUILayout.VerticalScope())
          {
-             //Horizontal Space for the General Management
+             serializedObject.Update();
+             
+             //Horizontal Space for add and remove mixers
+             using (new EditorGUILayout.HorizontalScope("Box"))
+             {
+                 if (GUILayout.Button("Add Mixer"))
+                 {
+                     manager.mixers.Add(new AudioManager.AudioTrackMixer());
+                     mixerGroupPopup.Add("Default Mixer (You should put any name)");
+                 }
+
+                 GUILayout.Space(10f);
+
+                 if (GUILayout.Button("Remove Mixer"))
+                 {
+                     manager.mixers.Remove(manager.mixers.ElementAt(manager.mixers.Count - 1));
+                     mixerGroupPopup.RemoveAt(mixerGroupPopup.Count - 1);
+                 }
+             }
+
+             var buttonStyle = new GUIStyle(GUI.skin.button);
+             buttonStyle.normal.textColor = new Color(.5f, .5f, 1);
+             //Draw Mixers
+             //_reorderableMixers.DoLayoutList();
+             var  blueStylePreset = new GUIStyle(GUI.skin.box);
+             blueStylePreset.normal.textColor = new Color(.1f, .6f, .8f);
+             var greenStylePreset = new GUIStyle(GUI.skin.button);
+             greenStylePreset.normal.textColor = new Color(.05f, .9f, .2f);
+             var redStylePreset = new GUIStyle(GUI.skin.button);
+             greenStylePreset.normal.textColor = new Color(1f, .2f, .2f);
+             
+             for (int i = 0; i < manager.mixers.Count; i++)
+             {
+                 using (new EditorGUILayout.HorizontalScope("HelpBox"))
+                 {
+                     using (new EditorGUILayout.VerticalScope())
+                     {
+                         manager.mixers[i].dropdownMixer = EditorGUILayout.Foldout(manager.mixers[i].dropdownMixer, string.Empty);
+                         EditorGUILayout.LabelField($"Mixer Group: {manager.mixers[i].name}", blueStylePreset);
+
+                         mixerGroupPopup[i] = manager.mixers[i].name;
+
+                         if (manager.mixers[i].dropdownMixer)
+                         {
+                             manager.mixers[i].name = EditorGUILayout.TextField(manager.mixers[i].name);
+
+                             manager.mixers[i].mixerGroup = (AudioMixerGroup) EditorGUILayout.ObjectField(manager.mixers[i].mixerGroup, typeof(AudioMixerGroup), true);
+                         }
+                         
+                         if (GUILayout.Button("X", greenStylePreset))
+                         {
+                             manager.mixers.RemoveAt(i);
+                             mixerGroupPopup.RemoveAt(i);
+                         }
+                     }
+                 }
+             }
+             
+             EditorGUILayout.Space();
+             
+             //Horizontal Space for add and remove tracks
              using (new EditorGUILayout.HorizontalScope())
              {
-                 //A button for add a new track to the list
                  if (GUILayout.Button("Add Track"))
                  {
                      manager.tracks.Add(new AudioManager.AudioTrack());
+                     mixerIndex.Add(0);
                  }
 
                  GUILayout.Space(10f);
@@ -61,25 +133,21 @@ public class AudioManagerEditor : UnityEditor.Editor
                  if (GUILayout.Button("Remove Track"))
                  {
                      manager.tracks.Remove(manager.tracks.ElementAt(manager.tracks.Count - 1));
+                     mixerIndex.RemoveAt(mixerIndex.Count - 1);
                  }
              }
 
-             serializedObject.Update();
-             
              _reorderableTracks.DoLayoutList();
 
              serializedObject.ApplyModifiedProperties();
          }
      }
-     
-     
-    public void DrawListItems(Rect position, int index, bool isActive, bool isFocused)
+
+     //Property Drawer for the tracks class
+     public void DrawListTracks(Rect position, int index, bool isActive, bool isFocused)
     {
         SerializedProperty property = _reorderableTracks.serializedProperty.GetArrayElementAtIndex(index);
-        
-        GUIStyle blueStylePreset = new GUIStyle(GUI.skin.label);
-        blueStylePreset.normal.textColor = new Color(.1f, .6f, .8f);
-        
+
         position.width -= 34;
         position.height = 18;
         
@@ -89,11 +157,10 @@ public class AudioManagerEditor : UnityEditor.Editor
         dropdownRect.x += 10;
         dropdownRect.y += 5;
         
-        property.isExpanded = EditorGUI.Foldout(dropdownRect, property.isExpanded, dropdownLabel);
+        property.isExpanded = EditorGUI.Foldout(dropdownRect, property.isExpanded, dropdownLabelTracks);
         
         position.x += 50;
         position.width -= 15;
-        
         
         Rect fieldRect = new Rect(position);
         
@@ -109,15 +176,26 @@ public class AudioManagerEditor : UnityEditor.Editor
         if (property.isExpanded)
         {
             Space(ref fieldRect, 20f);
+            var mixerField = property.FindPropertyRelative("mixer");
+            
+            EditorGUI.LabelField(fieldRect, "Mixer Group: ");
+
+            var x = fieldRect.x;
+            fieldRect.x += (EditorGUIUtility.currentViewWidth - 495);
+
+            Rect popupRect = new Rect(fieldRect.position, new Vector2(300, 10));
+
+            mixerIndex[index] = EditorGUI.Popup(popupRect, mixerIndex[index], mixerGroupPopup.ToArray());
+
+            fieldRect.x = x;
+            Space(ref fieldRect);
             //Draw Clip
             EditorGUI.PropertyField(fieldRect, clipField);
             
             Space(ref fieldRect);
             //Draw Name
             EditorGUI.TextField(fieldRect, "Name" , nameField.stringValue);
-            
-            var mixerField = property.FindPropertyRelative("mixer");
-            
+
             var loopField = property.FindPropertyRelative("loop");
             
             SerializedProperty priorityField = property.FindPropertyRelative("priority");
@@ -139,9 +217,10 @@ public class AudioManagerEditor : UnityEditor.Editor
 
             Rect buttonRect = new Rect(fieldRect.position, new Vector2(50, fieldRect.height));
             buttonRect.x += (EditorGUIUtility.currentViewWidth * 0.5f)-buttonRect.x;
-            if (GUI.Button(buttonRect, "-"))
+            if (GUI.Button(buttonRect, "X"))
             {
                 manager.tracks.Remove(manager.tracks.ElementAt(index));
+                mixerIndex.RemoveAt(index);
             }
             Space(ref fieldRect, 15);
             DrawUILine(fieldRect.x, fieldRect.y);
@@ -152,16 +231,17 @@ public class AudioManagerEditor : UnityEditor.Editor
             Rect buttonRect = new Rect(dropdownRect.position, new Vector2(50, 20));
             buttonRect.y -= 5;
             buttonRect.x += (EditorGUIUtility.currentViewWidth - (buttonRect.x * 3));
-            if (GUI.Button(buttonRect, "-"))
+            if (GUI.Button(buttonRect, "X"))
             {
                 manager.tracks.Remove(manager.tracks.ElementAt(index));
+                mixerIndex.RemoveAt(index);
             }
         }
         
-        GetDropdownLabel(index);
+        GetDropdownLabelTracks(index);
     }
 
-    void GetDropdownLabel(int index)
+     void GetDropdownLabelTracks(int index)
     {
         int i = index;
 
@@ -176,7 +256,7 @@ public class AudioManagerEditor : UnityEditor.Editor
 
         if (property.isExpanded)
         {
-            dropdownLabel = string.Empty;
+            dropdownLabelTracks = string.Empty;
         }
         else
         {
@@ -185,23 +265,45 @@ public class AudioManagerEditor : UnityEditor.Editor
             if (clipT.objectReferenceValue != null)
             {
                 clipName = ((AudioClip) clipT.objectReferenceValue).name;
-                dropdownLabel = clipName != string.Empty ? $"Track: {clipName}" : "Default Track";
             }
+            else
+            {
+                clipName = string.Empty;
+            }
+            dropdownLabelTracks = clipName != string.Empty ? $"Track: {clipName}" : "Default Track";
         }
     }
 
-    void DrawHeader(Rect rect)
+     void DrawHeaderTracks(Rect rect)
     {
+        var  blueStylePreset = new GUIStyle(GUI.skin.label);
+        blueStylePreset.normal.textColor = new Color(.1f, .6f, .8f);
         string name = "Audio Manager Tracks";
-        EditorGUI.LabelField(rect, name);
+        EditorGUI.LabelField(rect, name, blueStylePreset);
     }
     
-    public void Space(ref Rect pos, float space = 30f)
+     void DrawFooterTracks(Rect rect)
+    {
+        var  blueStylePreset = new GUIStyle(GUI.skin.label);
+        blueStylePreset.normal.textColor = new Color(.1f, .6f, .8f);
+        string name = "By @babelgames_es";
+        EditorGUI.LabelField(rect, name, blueStylePreset);
+    }
+    
+     void DrawBackgroundNoTracks(Rect rect)
+    {
+        var greenStylePreset = new GUIStyle(GUI.skin.label);
+        greenStylePreset.normal.textColor = new Color(.05f, .9f, .2f);
+        string name = "Add tracks for setting the audio in your game";
+        EditorGUI.LabelField(rect, name, greenStylePreset);
+    }
+    
+     public void Space(ref Rect pos, float space = 30f)
     {
         pos.y += space;
     }
     
-    public static void DrawUILine(float posX, float posY, float thickness = 38, float padding = 30)
+     public static void DrawUILine(float posX, float posY, float thickness = 38, float padding = 30)
     {
         Rect r = new Rect(posX, posY, thickness, padding);
         r.width = EditorGUIUtility.currentViewWidth;

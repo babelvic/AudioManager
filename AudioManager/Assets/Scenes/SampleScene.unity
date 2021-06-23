@@ -344,30 +344,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   tracks:
-  - name: retro_explosion_deep_02
-    clip: {fileID: 8300000, guid: b999b445cc65fb147a3ba21b3927efb9, type: 3}
-    mixer: {fileID: 0}
-    loop: 0
-    priority: 0
-    volume: 0
-    pitch: 0
-    spatialBlend: 0
-    h_source: {fileID: 0}
-  - name: BotonPlay
-    clip: {fileID: 8300000, guid: 28c780b296168144d8ec68261b4e8f25, type: 3}
-    mixer: {fileID: 0}
-    loop: 0
-    priority: 0
-    volume: 0
-    pitch: 0
-    spatialBlend: 0
-    h_source: {fileID: 0}
   - name: LaserShoot
     clip: {fileID: 8300000, guid: 02facaf21a7db7d4abbe25a79e13acf0, type: 3}
     mixer: {fileID: 0}
     loop: 0
+    priority: 116.5
+    volume: 0
+    pitch: 0
+    spatialBlend: 0
+    h_source: {fileID: 0}
+  - name: 
+    clip: {fileID: 0}
+    mixer: {fileID: 0}
+    loop: 0
     priority: 0
     volume: 0
     pitch: 0
     spatialBlend: 0
     h_source: {fileID: 0}
+  mixers:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
