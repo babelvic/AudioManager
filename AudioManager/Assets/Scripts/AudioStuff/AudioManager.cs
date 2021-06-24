@@ -23,6 +23,10 @@ namespace AudioEngine
         //The mixers of the game project
         public List<AudioTrackMixer> mixers;
         
+        //MixerGroupFindStuff
+        public List<string> mixerGroupPopup;
+        public List<int> mixerIndex;
+        
         [System.Serializable]
         public class AudioTrack
         {

@@ -7,6 +7,7 @@ using UnityEditor;
 
 //Own Namespaces
 using AudioEngine;
+using NUnit.Framework.Constraints;
 using UnityEditor.PackageManager;
 using UnityEditorInternal;
 using UnityEngine.Audio;
@@ -18,15 +19,11 @@ public class AudioManagerEditor : UnityEditor.Editor
 {
      AudioManager manager;
 
-     private SerializedProperty s_mixers;
      private SerializedProperty s_tracks;
      
      private ReorderableList _reorderableTracks;
      
      private string dropdownLabelTracks;
-
-     private List<string> mixerGroupPopup = new List<string>();
-     private List<int> mixerIndex = new List<int>();
 
      private void OnEnable()
      {
@@ -67,15 +64,15 @@ public class AudioManagerEditor : UnityEditor.Editor
                  if (GUILayout.Button("Add Mixer"))
                  {
                      manager.mixers.Add(new AudioManager.AudioTrackMixer());
-                     mixerGroupPopup.Add("Default Mixer (You should put any name)");
+                     manager.mixerGroupPopup.Add("Default Mixer (You should put any name)");
                  }
 
                  GUILayout.Space(10f);
 
                  if (GUILayout.Button("Remove Mixer"))
                  {
-                     manager.mixers.Remove(manager.mixers.ElementAt(manager.mixers.Count - 1));
-                     mixerGroupPopup.RemoveAt(mixerGroupPopup.Count - 1);
+                     if(manager.mixers.Count >= 1) manager.mixers.Remove(manager.mixers.ElementAt(manager.mixers.Count - 1));
+                     if(manager.mixerGroupPopup.Count >= 1) manager.mixerGroupPopup.RemoveAt(manager.mixerGroupPopup.Count - 1);
                  }
              }
 
@@ -99,7 +96,10 @@ public class AudioManagerEditor : UnityEditor.Editor
                          manager.mixers[i].dropdownMixer = EditorGUILayout.Foldout(manager.mixers[i].dropdownMixer, string.Empty);
                          EditorGUILayout.LabelField($"Mixer Group: {manager.mixers[i].name}", blueStylePreset);
 
-                         mixerGroupPopup[i] = manager.mixers[i].name;
+                         if (manager.mixers[i].name != string.Empty)
+                         {
+                             manager.mixerGroupPopup[i] = manager.mixers[i].name;
+                         }
 
                          if (manager.mixers[i].dropdownMixer)
                          {
@@ -111,7 +111,7 @@ public class AudioManagerEditor : UnityEditor.Editor
                          if (GUILayout.Button("X", greenStylePreset))
                          {
                              manager.mixers.RemoveAt(i);
-                             mixerGroupPopup.RemoveAt(i);
+                             manager.mixerGroupPopup.RemoveAt(i);
                          }
                      }
                  }
@@ -125,15 +125,19 @@ public class AudioManagerEditor : UnityEditor.Editor
                  if (GUILayout.Button("Add Track"))
                  {
                      manager.tracks.Add(new AudioManager.AudioTrack());
-                     mixerIndex.Add(0);
+                     manager.mixerIndex.Add(0);
                  }
 
                  GUILayout.Space(10f);
 
                  if (GUILayout.Button("Remove Track"))
                  {
-                     manager.tracks.Remove(manager.tracks.ElementAt(manager.tracks.Count - 1));
-                     mixerIndex.RemoveAt(mixerIndex.Count - 1);
+                     if(manager.tracks.Count - 1 >= 0) manager.tracks.RemoveAt(manager.tracks.Count-1);
+                     if(manager.mixerIndex.Count - 1 >= 0) manager.mixerIndex.RemoveAt(manager.mixerIndex.Count-1);
+                     Debug.Log("id: " + manager.mixerIndex.Count);
+                     Debug.Log("track: " + manager.tracks.Count);
+                     Debug.Log("mixerGroupPopup: " + manager.mixerGroupPopup.Count);
+                     Debug.Log("mixerGroup: " + manager.mixers.Count);
                  }
              }
 
@@ -185,7 +189,7 @@ public class AudioManagerEditor : UnityEditor.Editor
 
             Rect popupRect = new Rect(fieldRect.position, new Vector2(300, 10));
 
-            mixerIndex[index] = EditorGUI.Popup(popupRect, mixerIndex[index], mixerGroupPopup.ToArray());
+            manager.mixerIndex[index] = EditorGUI.Popup(popupRect, manager.mixerIndex[index], manager.mixerGroupPopup.ToArray());
 
             fieldRect.x = x;
             Space(ref fieldRect);
@@ -220,7 +224,7 @@ public class AudioManagerEditor : UnityEditor.Editor
             if (GUI.Button(buttonRect, "X"))
             {
                 manager.tracks.Remove(manager.tracks.ElementAt(index));
-                mixerIndex.RemoveAt(index);
+                manager.mixerIndex.RemoveAt(index);
             }
             Space(ref fieldRect, 15);
             DrawUILine(fieldRect.x, fieldRect.y);
@@ -234,7 +238,7 @@ public class AudioManagerEditor : UnityEditor.Editor
             if (GUI.Button(buttonRect, "X"))
             {
                 manager.tracks.Remove(manager.tracks.ElementAt(index));
-                mixerIndex.RemoveAt(index);
+                manager.mixerIndex.RemoveAt(index);
             }
         }
         
