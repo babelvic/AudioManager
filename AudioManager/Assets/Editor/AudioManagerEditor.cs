@@ -213,6 +213,11 @@ public class AudioManagerEditor : UnityEditor.Editor
             if (manager.tracks.Count - 1 >= index)
             {
                 manager.mixerIndex[index] = EditorGUI.Popup(popupRect, manager.mixerIndex[index], manager.mixerGroupPopup.ToArray());
+                if (manager.mixerGroupPopup.Count - 1 < manager.mixerIndex[index])
+                {
+                    if(manager.mixerGroupPopup.Count - 1 >= 0) manager.mixerIndex[index] -= 1;
+                    Debug.Log(manager.mixerIndex[index]);
+                }
                 FindMixerByID(manager.mixerIndex[index], index);
             }
 
