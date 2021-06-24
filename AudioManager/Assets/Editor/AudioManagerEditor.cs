@@ -64,7 +64,7 @@ public class AudioManagerEditor : UnityEditor.Editor
                  if (GUILayout.Button("Add Mixer"))
                  {
                      manager.mixers.Add(new AudioManager.AudioTrackMixer());
-                     manager.mixerGroupPopup.Add("Default Mixer (You should put any name)");
+                     manager.mixerGroupPopup.Add(string.Empty);
                  }
 
                  GUILayout.Space(10f);
@@ -95,10 +95,15 @@ public class AudioManagerEditor : UnityEditor.Editor
                      {
                          manager.mixers[i].dropdownMixer = EditorGUILayout.Foldout(manager.mixers[i].dropdownMixer, string.Empty);
                          EditorGUILayout.LabelField($"Mixer Group: {manager.mixers[i].name}", blueStylePreset);
+                         if(manager.mixers[i].mixerGroup != null) manager.mixers[i].name = manager.mixers[i].mixerGroup.name;
 
-                         if (manager.mixers[i].name != string.Empty)
+                         if (manager.mixers[i].name != "")
                          {
                              manager.mixerGroupPopup[i] = manager.mixers[i].name;
+                         }
+                         else
+                         {
+                             manager.mixerGroupPopup[i] = "Default Mixer (You should put any name)";
                          }
 
                          if (manager.mixers[i].dropdownMixer)
@@ -134,16 +139,32 @@ public class AudioManagerEditor : UnityEditor.Editor
                  {
                      if(manager.tracks.Count - 1 >= 0) manager.tracks.RemoveAt(manager.tracks.Count-1);
                      if(manager.mixerIndex.Count - 1 >= 0) manager.mixerIndex.RemoveAt(manager.mixerIndex.Count-1);
-                     Debug.Log("id: " + manager.mixerIndex.Count);
-                     Debug.Log("track: " + manager.tracks.Count);
-                     Debug.Log("mixerGroupPopup: " + manager.mixerGroupPopup.Count);
-                     Debug.Log("mixerGroup: " + manager.mixers.Count);
+                     // Debug.Log("id: " + manager.mixerIndex.Count);
+                     // Debug.Log("track: " + manager.tracks.Count);
+                     // Debug.Log("mixerGroupPopup: " + manager.mixerGroupPopup.Count);
+                     // Debug.Log("mixerGroup: " + manager.mixers.Count);
                  }
              }
 
              _reorderableTracks.DoLayoutList();
 
              serializedObject.ApplyModifiedProperties();
+         }
+     }
+
+     void FindMixerByID(int id, int index)
+     {
+         if (manager.mixers.Count >= 1)
+         {
+             if (manager.tracks[index].mixer != manager.mixers[id].mixerGroup)
+             {
+                 Debug.Log(index);
+                 manager.tracks[index].mixer = manager.mixers[id].mixerGroup;
+                 //Debug.Log($"Mixer: {manager.tracks[index].mixer}");
+                 //Debug.Log($"Mixer: {manager.tracks[index].clip}");
+                 //Debug.Log($"Mixer: {manager.tracks[index].name}");
+                 //Debug.Log($"Mixer: {manager.tracks[index].volume}");
+             }
          }
      }
 
@@ -181,15 +202,19 @@ public class AudioManagerEditor : UnityEditor.Editor
         {
             Space(ref fieldRect, 20f);
             var mixerField = property.FindPropertyRelative("mixer");
-            
+
             EditorGUI.LabelField(fieldRect, "Mixer Group: ");
 
             var x = fieldRect.x;
             fieldRect.x += (EditorGUIUtility.currentViewWidth - 495);
 
             Rect popupRect = new Rect(fieldRect.position, new Vector2(300, 10));
-
-            manager.mixerIndex[index] = EditorGUI.Popup(popupRect, manager.mixerIndex[index], manager.mixerGroupPopup.ToArray());
+            
+            if (manager.tracks.Count - 1 >= index)
+            {
+                manager.mixerIndex[index] = EditorGUI.Popup(popupRect, manager.mixerIndex[index], manager.mixerGroupPopup.ToArray());
+                FindMixerByID(manager.mixerIndex[index], index);
+            }
 
             fieldRect.x = x;
             Space(ref fieldRect);

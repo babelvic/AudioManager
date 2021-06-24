@@ -346,16 +346,7 @@ MonoBehaviour:
   tracks:
   - name: 
     clip: {fileID: 0}
-    mixer: {fileID: 0}
-    loop: 0
-    priority: 0
-    volume: 0
-    pitch: 0
-    spatialBlend: 0
-    h_source: {fileID: 0}
-  - name: 
-    clip: {fileID: 0}
-    mixer: {fileID: 0}
+    mixer: {fileID: -6328668385672608837, guid: f1d81173983f4734dbd3ff9a49579828, type: 2}
     loop: 0
     priority: 0
     volume: 0
@@ -363,13 +354,9 @@ MonoBehaviour:
     spatialBlend: 0
     h_source: {fileID: 0}
   mixers:
-  - name: Fx
-    mixerGroup: {fileID: 0}
-    dropdownMixer: 1
-  - name: mUSICQ
-    mixerGroup: {fileID: 0}
+  - name: Music
+    mixerGroup: {fileID: -6328668385672608837, guid: f1d81173983f4734dbd3ff9a49579828, type: 2}
     dropdownMixer: 1
   mixerGroupPopup:
-  - Fx
-  - mUSICQ
-  mixerIndex: 0000000001000000
+  - Music
+  mixerIndex: 00000000
