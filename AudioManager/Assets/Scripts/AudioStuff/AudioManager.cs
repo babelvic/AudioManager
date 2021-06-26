@@ -36,7 +36,7 @@ namespace AudioEngine
 
             public bool loop;
 
-            [Range(0f, 256f)] public float priority;
+            [Range(0, 256)] public int priority;
             [Range(0f, 1f)] public float volume;
             [Range(-3f, 3f)] public float pitch;
             [Range(0f, 1f)] public float spatialBlend;
@@ -65,7 +65,18 @@ namespace AudioEngine
 
         #region Public Functions
 
-        
+        public void SetAudioInScene()
+        {
+            foreach (AudioTrack t in tracks)
+            {
+                t.h_source = gameObject.AddComponent<AudioSource>();
+                t.h_source.clip = t.clip;
+                t.h_source.priority = t.priority;
+                t.h_source.volume = t.volume;
+                t.h_source.pitch = t.pitch;
+                t.h_source.spatialBlend = t.spatialBlend;
+            }
+        }
 
         #endregion
         

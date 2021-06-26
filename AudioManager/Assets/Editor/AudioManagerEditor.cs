@@ -158,12 +158,7 @@ public class AudioManagerEditor : UnityEditor.Editor
          {
              if (manager.tracks[index].mixer != manager.mixers[id].mixerGroup)
              {
-                 Debug.Log(index);
                  manager.tracks[index].mixer = manager.mixers[id].mixerGroup;
-                 //Debug.Log($"Mixer: {manager.tracks[index].mixer}");
-                 //Debug.Log($"Mixer: {manager.tracks[index].clip}");
-                 //Debug.Log($"Mixer: {manager.tracks[index].name}");
-                 //Debug.Log($"Mixer: {manager.tracks[index].volume}");
              }
          }
      }
@@ -206,13 +201,15 @@ public class AudioManagerEditor : UnityEditor.Editor
             EditorGUI.LabelField(fieldRect, "Mixer Group: ");
 
             var x = fieldRect.x;
-            fieldRect.x += (EditorGUIUtility.currentViewWidth - 495);
 
-            Rect popupRect = new Rect(fieldRect.position, new Vector2(300, 10));
+            Rect mixerRect = new Rect(fieldRect.position, new Vector2((EditorGUIUtility.currentViewWidth * 0.2f), fieldRect.height));
+            mixerRect.x += (EditorGUIUtility.currentViewWidth * 0.5f)-mixerRect.x;
+
+            Rect popupRect = new Rect(fieldRect.position, new Vector2(200, 10));
             
             if (manager.tracks.Count - 1 >= index)
             {
-                manager.mixerIndex[index] = EditorGUI.Popup(popupRect, manager.mixerIndex[index], manager.mixerGroupPopup.ToArray());
+                manager.mixerIndex[index] = EditorGUI.Popup(mixerRect, manager.mixerIndex[index], manager.mixerGroupPopup.ToArray());
                 if (manager.mixerGroupPopup.Count - 1 < manager.mixerIndex[index])
                 {
                     if(manager.mixerGroupPopup.Count - 1 >= 0) manager.mixerIndex[index] -= 1;
@@ -221,7 +218,19 @@ public class AudioManagerEditor : UnityEditor.Editor
                 FindMixerByID(manager.mixerIndex[index], index);
             }
 
+            fieldRect.x = 0;
+            fieldRect.x = EditorGUIUtility.currentViewWidth - 100;
+            
+            SerializedProperty loopField = property.FindPropertyRelative(nameof(AudioManager.AudioTrack.loop));
+            //Draw Loop
+            EditorGUI.Toggle(fieldRect, ((bool) clipField.objectReferenceValue));
+
+            fieldRect.x += 30;
+            
+            EditorGUI.LabelField(fieldRect, "LOOP");
+            
             fieldRect.x = x;
+            
             Space(ref fieldRect);
             //Draw Clip
             EditorGUI.PropertyField(fieldRect, clipField);
@@ -230,8 +239,6 @@ public class AudioManagerEditor : UnityEditor.Editor
             //Draw Name
             EditorGUI.TextField(fieldRect, "Name" , nameField.stringValue);
 
-            var loopField = property.FindPropertyRelative("loop");
-            
             SerializedProperty priorityField = property.FindPropertyRelative("priority");
             SerializedProperty volumeField = property.FindPropertyRelative("volume");
             SerializedProperty pitchField = property.FindPropertyRelative("pitch");
@@ -240,9 +247,9 @@ public class AudioManagerEditor : UnityEditor.Editor
             var customLabel = new Label("LABEL");
             //Draw Values
             Space(ref fieldRect);
-            EditorGUI.Slider(fieldRect, priorityField, 0f, 256f);
+            EditorGUI.IntSlider(fieldRect, priorityField, 0, 256);
             Space(ref fieldRect);
-            EditorGUI.Slider(fieldRect, volumeField, 0f, 1);
+            EditorGUI.Slider(fieldRect, volumeField, 0f, 1f);
             Space(ref fieldRect);
             EditorGUI.Slider(fieldRect, pitchField, -3f, 3);
             Space(ref fieldRect);

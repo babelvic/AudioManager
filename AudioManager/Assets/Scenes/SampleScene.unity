@@ -344,9 +344,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   tracks:
-  - name: 
-    clip: {fileID: 0}
+  - name: BossFightStart
+    clip: {fileID: 8300000, guid: 6321f18647e66f54dbf9ed2237c816c4, type: 3}
     mixer: {fileID: -6328668385672608837, guid: f1d81173983f4734dbd3ff9a49579828, type: 2}
+    loop: 0
+    priority: 0
+    volume: 0.102
+    pitch: -0.78
+    spatialBlend: 0
+    h_source: {fileID: 0}
+  - name: retro_explosion_bass_10
+    clip: {fileID: 8300000, guid: 9320d6cb53d868c4fa7e6d8ca415130f, type: 3}
+    mixer: {fileID: 9101494550402916091, guid: f1d81173983f4734dbd3ff9a49579828, type: 2}
     loop: 0
     priority: 0
     volume: 0
@@ -357,6 +366,10 @@ MonoBehaviour:
   - name: Music
     mixerGroup: {fileID: -6328668385672608837, guid: f1d81173983f4734dbd3ff9a49579828, type: 2}
     dropdownMixer: 1
+  - name: FX
+    mixerGroup: {fileID: 9101494550402916091, guid: f1d81173983f4734dbd3ff9a49579828, type: 2}
+    dropdownMixer: 1
   mixerGroupPopup:
   - Music
-  mixerIndex: 00000000
+  - FX
+  mixerIndex: 0000000001000000
