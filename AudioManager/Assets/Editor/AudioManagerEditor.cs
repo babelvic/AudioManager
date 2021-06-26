@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
 using UnityEditor;
@@ -221,13 +222,12 @@ public class AudioManagerEditor : UnityEditor.Editor
             fieldRect.x = 0;
             fieldRect.x = EditorGUIUtility.currentViewWidth - 100;
             
-            SerializedProperty loopField = property.FindPropertyRelative(nameof(AudioManager.AudioTrack.loop));
             //Draw Loop
-            EditorGUI.Toggle(fieldRect, ((bool) clipField.objectReferenceValue));
+            manager.tracks[index].loop = EditorGUI.Toggle(fieldRect, manager.tracks[index].loop);
 
-            fieldRect.x += 30;
+            fieldRect.x += 25;
             
-            EditorGUI.LabelField(fieldRect, "LOOP");
+            EditorGUI.LabelField(fieldRect, "Loop");
             
             fieldRect.x = x;
             
