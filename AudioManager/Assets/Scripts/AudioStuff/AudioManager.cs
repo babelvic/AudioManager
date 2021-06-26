@@ -59,6 +59,9 @@ namespace AudioEngine
         {
             if (!instance) Configure();
             else Destroy(this.gameObject);
+            
+            //Set the audio
+            SetAudioInScene();
         }
 
         #endregion
@@ -71,6 +74,8 @@ namespace AudioEngine
             {
                 t.h_source = gameObject.AddComponent<AudioSource>();
                 t.h_source.clip = t.clip;
+                t.h_source.outputAudioMixerGroup = t.mixer;
+                t.h_source.loop = t.loop;
                 t.h_source.priority = t.priority;
                 t.h_source.volume = t.volume;
                 t.h_source.pitch = t.pitch;

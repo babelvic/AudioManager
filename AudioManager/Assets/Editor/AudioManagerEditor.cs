@@ -162,6 +162,7 @@ public class AudioManagerEditor : UnityEditor.Editor
                  manager.tracks[index].mixer = manager.mixers[id].mixerGroup;
              }
          }
+         Debug.Log(manager.mixers[id].mixerGroup);
      }
 
      //Property Drawer for the tracks class
