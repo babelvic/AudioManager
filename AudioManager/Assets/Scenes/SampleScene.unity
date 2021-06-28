@@ -346,12 +346,21 @@ MonoBehaviour:
   tracks:
   - name: BotonPlay
     clip: {fileID: 8300000, guid: 28c780b296168144d8ec68261b4e8f25, type: 3}
-    mixer: {fileID: 9101494550402916091, guid: f1d81173983f4734dbd3ff9a49579828, type: 2}
+    mixer: {fileID: -6328668385672608837, guid: f1d81173983f4734dbd3ff9a49579828, type: 2}
     loop: 1
     priority: 105
     volume: 0.387
     pitch: 1.57
     spatialBlend: 0.203
+    h_source: {fileID: 0}
+  - name: LaserShoot
+    clip: {fileID: 8300000, guid: 02facaf21a7db7d4abbe25a79e13acf0, type: 3}
+    mixer: {fileID: 9101494550402916091, guid: f1d81173983f4734dbd3ff9a49579828, type: 2}
+    loop: 0
+    priority: 42
+    volume: 0.724
+    pitch: 0
+    spatialBlend: 0.289
     h_source: {fileID: 0}
   mixers:
   - name: Music
@@ -363,4 +372,4 @@ MonoBehaviour:
   mixerGroupPopup:
   - Music
   - FX
-  mixerIndex: 01000000
+  mixerIndex: 0000000001000000

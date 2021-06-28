@@ -83,6 +83,18 @@ namespace AudioEngine
             }
         }
 
+        public void PlayTrack(string name)
+        {
+            foreach (var t in tracks)
+            {
+                if (t.name == name)
+                {
+                    t.h_source.Play();
+                    break;
+                }
+            }
+        }
+
         #endregion
         
         #region Private Functions
