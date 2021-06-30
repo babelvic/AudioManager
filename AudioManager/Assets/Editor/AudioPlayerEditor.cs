@@ -5,55 +5,178 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEditor;
+using UnityEditorInternal;
 
 [CustomEditor(typeof(AudioPlayer))]
 public class AudioPlayerEditor : Editor
 {
      AudioPlayer manager;
-     
-     //List<List<string>> scriptEvents = new List<List<string>>();
 
-     public override void OnInspectorGUI()
+     private SerializedProperty s_audioEvents;
+
+     private ReorderableList _reorderableAudioEvents;
+
+     private void OnEnable()
      {
          manager = target as AudioPlayer;
 
-         List<MonoBehaviour> scripts = manager.GetComponents<MonoBehaviour>().Where(s => s.GetType().Name != manager.GetType().Name).ToList();
+         s_audioEvents = serializedObject.FindProperty(nameof(manager.audioEvent));
          
-         if (scripts.Count > 0)
+         #region ReorderableListTracks
+
+         _reorderableAudioEvents = new ReorderableList(serializedObject, s_audioEvents, true, true, false, false);
+         _reorderableAudioEvents.drawHeaderCallback = DrawHeaderTracks;
+         _reorderableAudioEvents.drawElementCallback = DrawAudioEvents;
+         _reorderableAudioEvents.drawFooterCallback = DrawFooterTracks;
+         _reorderableAudioEvents.drawNoneElementCallback = DrawBackgroundNoTracks;
+         
+
+         _reorderableAudioEvents.elementHeightCallback = delegate(int index) {
+             var element = _reorderableAudioEvents.serializedProperty.GetArrayElementAtIndex(index);
+             var margin = EditorGUIUtility.standardVerticalSpacing;
+             if (element.isExpanded) return 130 + margin;
+             else return 20 + margin;
+         };
+         
+         #endregion
+     }
+
+     public override void OnInspectorGUI()
+     {
+         serializedObject.Update();
+         
+         //Horizontal Space for add and remove tracks
+         using (new EditorGUILayout.HorizontalScope())
          {
-             string[] scriptNames = scripts.Select(s => s.GetType().Name).ToArray();
-             
-             int scriptIndex = EditorGUILayout.Popup("Script", scripts.ToList().IndexOf(manager.selectedScript), scriptNames);
-             if (scriptIndex >= 0) manager.selectedScript = scripts[scriptIndex];
-             else if (scripts.Count > 0) manager.selectedScript = scripts[0];
-
-            
-             List<MethodInfo> methods = manager.selectedScript.GetType().GetMethods().Where(m => m.DeclaringType == manager.selectedScript.GetType()).ToList();
-             
-             if (methods.Count > 0)
+             if (GUILayout.Button("Add Track"))
              {
-                 string[] methodNames = methods.Select(m => m.Name).ToArray();
+                 manager.audioEvent.Add(new AudioPlayer.AudioEvent());
+             }
 
-                 int methodIndex = EditorGUILayout.Popup("Method", methods.ToList().IndexOf(manager.selectedMethod), methodNames);
-                 if (methodIndex >= 0) manager.selectedMethod = methods[methodIndex];
-                 else manager.selectedMethod = methods[0];
+             GUILayout.Space(10f);
+
+             if (GUILayout.Button("Remove Track"))
+             {
+                 if(manager.audioEvent.Count - 1 >= 0) manager.audioEvent.RemoveAt(manager.audioEvent.Count-1);
+             }
+         }
+         
+         _reorderableAudioEvents.DoLayoutList();
+
+         serializedObject.ApplyModifiedProperties();
+     }
+
+     public void DrawAudioEvents(Rect position, int index, bool isActive, bool isFocused)
+     {
+         SerializedProperty property = _reorderableAudioEvents.serializedProperty.GetArrayElementAtIndex(index);
+         
+         position.width -= 34;
+         position.height = 18;
+        
+         Rect dropdownRect = new Rect(position);
+         dropdownRect.width = 10;
+         dropdownRect.height = 10;
+         dropdownRect.x += 10;
+         dropdownRect.y += 5;
+         
+         property.isExpanded = EditorGUI.Foldout(dropdownRect, property.isExpanded, "Audio Event");
+         
+         position.x += 50;
+         position.width -= 15;
+        
+         Rect fieldRect = new Rect(position);
+
+         if (property.isExpanded)
+         {
+             Space(ref fieldRect);
+             List<MonoBehaviour> scripts = manager.GetComponents<MonoBehaviour>().Where(s => s.GetType().Name != manager.GetType().Name).ToList();
+         
+             if (scripts.Count > 0)
+             {
+                 string[] scriptNames = scripts.Select(s => s.GetType().Name).ToArray();
+             
+                 int scriptIndex = EditorGUI.Popup(fieldRect, "Script", scripts.ToList().IndexOf(manager.audioEvent[index].selectedScript), scriptNames);
+                 if (scriptIndex >= 0) manager.audioEvent[index].selectedScript = scripts[scriptIndex];
+                 else if (scripts.Count > 0) manager.audioEvent[index].selectedScript = scripts[0];
+
+                 Space(ref fieldRect);
+            
+                 List<MethodInfo> methods = manager.audioEvent[index].selectedScript.GetType().GetMethods().Where(m => m.DeclaringType == manager.audioEvent[index].selectedScript.GetType()).ToList();
+             
+                 if (methods.Count > 0)
+                 {
+                     string[] methodNames = methods.Select(m => m.Name).ToArray();
+
+                     int methodIndex = EditorGUI.Popup(fieldRect, "Method", methods.ToList().IndexOf(manager.audioEvent[index].selectedMethod), methodNames);
+                     if (methodIndex >= 0) manager.audioEvent[index].selectedMethod = methods[methodIndex];
+                     else manager.audioEvent[index].selectedMethod = methods[0];
+                 }
+                 
+                 Space(ref fieldRect, 40);
+                 
+                 Rect buttonRect = new Rect(fieldRect.position, new Vector2(50, fieldRect.height));
+                 buttonRect.x += (EditorGUIUtility.currentViewWidth * 0.5f)-buttonRect.x;
+                 if (GUI.Button(buttonRect, "X"))
+                 {
+                     manager.audioEvent.Remove(manager.audioEvent.ElementAt(index));
+                 }
+                 
+                 Space(ref fieldRect, 15);
+                 
+                 DrawUILine(fieldRect.x, fieldRect.y);
+                 
+                 Space(ref fieldRect);
+             }
+         }
+         else
+         {
+             Rect buttonRect = new Rect(dropdownRect.position, new Vector2(50, 20));
+             buttonRect.y -= 5;
+             buttonRect.x += (EditorGUIUtility.currentViewWidth - (buttonRect.x * 2.5f));
+             if (GUI.Button(buttonRect, "X"))
+             {
+                 manager.audioEvent.Remove(manager.audioEvent.ElementAt(index));
              }
          }
      }
      
+     void DrawHeaderTracks(Rect rect)
+     {
+         var  blueStylePreset = new GUIStyle(GUI.skin.label);
+         blueStylePreset.normal.textColor = new Color(.1f, .6f, .8f);
+         string name = "Audio Event Players";
+         EditorGUI.LabelField(rect, name, blueStylePreset);
+     }
+    
+     void DrawFooterTracks(Rect rect)
+     {
+         var  blueStylePreset = new GUIStyle(GUI.skin.label);
+         blueStylePreset.normal.textColor = new Color(.1f, .6f, .8f);
+         string name = "By @babelgames_es";
+         EditorGUI.LabelField(rect, name, blueStylePreset);
+     }
+    
+     void DrawBackgroundNoTracks(Rect rect)
+     {
+         var greenStylePreset = new GUIStyle(GUI.skin.label);
+         greenStylePreset.normal.textColor = new Color(.05f, .9f, .2f);
+         string name = "Add Audio Events for attach any function to any track";
+         EditorGUI.LabelField(rect, name, greenStylePreset);
+     }
      
-     // scriptEvents.Add(scripts.Select(s => s.GetType().Name).ToList());
-     //
-     //     for (int i = 0; i < scripts.Count; i++)
-     // {
-     //     var methodss = scripts.GetType().GetMethods().Where(m => m.DeclaringType == manager.audioEvent.selectedScript.GetType()).ToList();
-     //     if (methodss.Count > 0)
-     //     {
-     //         for (int j = 0; j < methodss.Count; j++)
-     //         {
-     //             scriptEvents[i].Add(methodss[j].Name);
-     //         }
-     //     }
-     // }
-
+     public void Space(ref Rect pos, float space = 30f)
+     {
+         pos.y += space;
+     }
+     
+     public static void DrawUILine(float posX, float posY, float thickness = 38, float padding = 30)
+     {
+         Rect r = new Rect(posX, posY, thickness, padding);
+         r.width = EditorGUIUtility.currentViewWidth;
+         r.height = 2;
+         r.y+=padding * 0.3f;
+         r.x-=70;
+         r.width -= thickness;
+         EditorGUI.DrawRect(r, Color.cyan);
+     }
 }

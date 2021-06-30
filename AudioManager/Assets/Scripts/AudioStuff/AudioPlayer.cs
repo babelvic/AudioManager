@@ -10,6 +10,12 @@ using UnityEngine;
 
 public class AudioPlayer : MonoBehaviour
 {
-    public MonoBehaviour selectedScript;
-    public MethodInfo selectedMethod;
+    public List<AudioEvent> audioEvent;
+
+    [System.Serializable]
+    public class AudioEvent
+    {
+        public MonoBehaviour selectedScript;
+        public MethodInfo selectedMethod;
+    }
 }
