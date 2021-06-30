@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using AudioEngine;
 using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
@@ -43,6 +44,8 @@ public class AudioPlayerEditor : Editor
 
      public override void OnInspectorGUI()
      {
+         base.OnInspectorGUI();
+         
          serializedObject.Update();
          
          //Horizontal Space for add and remove tracks
@@ -88,44 +91,60 @@ public class AudioPlayerEditor : Editor
 
          if (property.isExpanded)
          {
-             Space(ref fieldRect);
-             List<MonoBehaviour> scripts = manager.GetComponents<MonoBehaviour>().Where(s => s.GetType().Name != manager.GetType().Name).ToList();
-         
-             if (scripts.Count > 0)
+             if (manager.audioEvent.Count - 1 >= index)
              {
-                 string[] scriptNames = scripts.Select(s => s.GetType().Name).ToArray();
-             
-                 int scriptIndex = EditorGUI.Popup(fieldRect, "Script", scripts.ToList().IndexOf(manager.audioEvent[index].selectedScript), scriptNames);
-                 if (scriptIndex >= 0) manager.audioEvent[index].selectedScript = scripts[scriptIndex];
-                 else if (scripts.Count > 0) manager.audioEvent[index].selectedScript = scripts[0];
-
                  Space(ref fieldRect);
-            
-                 List<MethodInfo> methods = manager.audioEvent[index].selectedScript.GetType().GetMethods().Where(m => m.DeclaringType == manager.audioEvent[index].selectedScript.GetType()).ToList();
+                 List<MonoBehaviour> scripts = manager.GetComponents<MonoBehaviour>().Where(s => s.GetType().Name != manager.GetType().Name).ToList();
              
-                 if (methods.Count > 0)
+                 if (scripts.Count > 0)
                  {
-                     string[] methodNames = methods.Select(m => m.Name).ToArray();
+                     string[] scriptNames = scripts.Select(s => s.GetType().Name).ToArray();
+                 
+                     //int scriptIndex = EditorGUI.Popup(fieldRect, "Script", scripts.ToList().IndexOf(manager.audioEvent[index].selectedScript), scriptNames);
+                     //if (scriptIndex >= 0) manager.audioEvent[index].selectedScript = scripts[scriptIndex];
+                     //else if (scripts.Count > 0) manager.audioEvent[index].selectedScript = scripts[0];
 
-                     int methodIndex = EditorGUI.Popup(fieldRect, "Method", methods.ToList().IndexOf(manager.audioEvent[index].selectedMethod), methodNames);
-                     if (methodIndex >= 0) manager.audioEvent[index].selectedMethod = methods[methodIndex];
-                     else manager.audioEvent[index].selectedMethod = methods[0];
+                     Space(ref fieldRect);
+
+                     List<EventInfo> allEvents = scripts.SelectMany(s => s.GetType().GetEvents()).ToList();
+                     List<EventInfo> matchEvents = new List<EventInfo>();
+                     
+                     foreach (var eventInfo in allEvents)
+                     {
+                         if (eventInfo.EventHandlerType.GetMethod("Invoke").GetParameters().Select(p => p.GetType()).SequenceEqual(typeof(AudioManager).GetMethod("PlayTrack")?.GetParameters().Select(p => p.GetType())))
+                         {
+                             matchEvents.Add(eventInfo);
+                         }
+                     }
+
+                     if (matchEvents.Count > 0)
+                     {
+                         string[] methodNames = matchEvents.Select(e => $"{e.DeclaringType}/{e.Name}()").ToArray();
+                     
+                         int methodIndex = EditorGUI.Popup(fieldRect, "Method", index, methodNames);
+                         if (methodIndex >= 0)
+                         {
+                             manager.audioEvent[index].TypeName = matchEvents[methodIndex].DeclaringType.AssemblyQualifiedName;
+                             manager.audioEvent[index].SelectedEventName = matchEvents[methodIndex].Name;
+                         }
+                         else manager.audioEvent[index].SelectedEventName = matchEvents[0].Name;
+                     }
+                     
+                     Space(ref fieldRect, 40);
+                     
+                     Rect buttonRect = new Rect(fieldRect.position, new Vector2(50, fieldRect.height));
+                     buttonRect.x += (EditorGUIUtility.currentViewWidth * 0.5f)-buttonRect.x;
+                     if (GUI.Button(buttonRect, "X"))
+                     {
+                         manager.audioEvent.Remove(manager.audioEvent.ElementAt(index));
+                     }
+                     
+                     Space(ref fieldRect, 15);
+                     
+                     DrawUILine(fieldRect.x, fieldRect.y);
+                     
+                     Space(ref fieldRect);
                  }
-                 
-                 Space(ref fieldRect, 40);
-                 
-                 Rect buttonRect = new Rect(fieldRect.position, new Vector2(50, fieldRect.height));
-                 buttonRect.x += (EditorGUIUtility.currentViewWidth * 0.5f)-buttonRect.x;
-                 if (GUI.Button(buttonRect, "X"))
-                 {
-                     manager.audioEvent.Remove(manager.audioEvent.ElementAt(index));
-                 }
-                 
-                 Space(ref fieldRect, 15);
-                 
-                 DrawUILine(fieldRect.x, fieldRect.y);
-                 
-                 Space(ref fieldRect);
              }
          }
          else

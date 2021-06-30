@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using AudioEngine;
 using UnityEditor;
-using UnityEditor.Profiling;
 using UnityEngine;
 
 public class AudioPlayer : MonoBehaviour
@@ -15,7 +14,21 @@ public class AudioPlayer : MonoBehaviour
     [System.Serializable]
     public class AudioEvent
     {
-        public MonoBehaviour selectedScript;
-        public MethodInfo selectedMethod;
+        public string SelectedEventName;
+        public string TypeName;
+    }
+
+    private void Start()
+    {
+        foreach (var ae in audioEvent)
+        {
+            Type type = Type.GetType(ae.TypeName);
+            EventInfo SelectedEvent = type.GetEvent(ae.SelectedEventName);
+
+            Component selectedComponent = GetComponent(type);
+
+            Delegate handler = Delegate.CreateDelegate(SelectedEvent.EventHandlerType, AudioManager.instance , typeof(AudioManager).GetMethod("PlayTrack"));
+            SelectedEvent.AddEventHandler(selectedComponent, handler);
+        }
     }
 }
