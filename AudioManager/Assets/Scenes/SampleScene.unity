@@ -299,6 +299,77 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1536678465
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1536678468}
+  - component: {fileID: 1536678469}
+  - component: {fileID: 1536678467}
+  - component: {fileID: 1536678466}
+  m_Layer: 0
+  m_Name: ObjectX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1536678466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1536678465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfc336f10b83bd74eaded16a658275c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1536678467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1536678465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6abb4ac8391535b4f9d143354326d0e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test1: []
+--- !u!4 &1536678468
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1536678465}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1536678469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1536678465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b01ee15c5e878a544a9e243a7f89d46b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectedScript: {fileID: 1536678467}
 --- !u!1 &2098241564
 GameObject:
   m_ObjectHideFlags: 0
@@ -353,15 +424,6 @@ MonoBehaviour:
     pitch: 1.57
     spatialBlend: 0.203
     h_source: {fileID: 0}
-  - name: LaserShoot
-    clip: {fileID: 8300000, guid: 02facaf21a7db7d4abbe25a79e13acf0, type: 3}
-    mixer: {fileID: 9101494550402916091, guid: f1d81173983f4734dbd3ff9a49579828, type: 2}
-    loop: 0
-    priority: 42
-    volume: 0.724
-    pitch: 0
-    spatialBlend: 0.289
-    h_source: {fileID: 0}
   mixers:
   - name: Music
     mixerGroup: {fileID: -6328668385672608837, guid: f1d81173983f4734dbd3ff9a49579828, type: 2}
@@ -372,4 +434,4 @@ MonoBehaviour:
   mixerGroupPopup:
   - Music
   - FX
-  mixerIndex: 0000000001000000
+  mixerIndex: 00000000
