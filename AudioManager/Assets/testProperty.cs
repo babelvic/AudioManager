@@ -11,8 +11,10 @@ public class testProperty : MonoBehaviour
 
     public event Action<string> someEvent;
 
-    private void Update()
+    private IEnumerator Start()
     {
+        yield return new WaitForSeconds(0.1f);
+        Debug.Log("Invoke");
         someEvent?.Invoke("BotonPlay");
     }
 }

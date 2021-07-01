@@ -44,7 +44,7 @@ public class AudioManagerEditor : UnityEditor.Editor
          _reorderableTracks.elementHeightCallback = delegate(int index) {
              var element = _reorderableTracks.serializedProperty.GetArrayElementAtIndex(index);
              var margin = EditorGUIUtility.standardVerticalSpacing;
-             if (element.isExpanded) return 260 + margin;
+             if (element.isExpanded) return 320 + margin;
              else return 20 + margin;
          };
          
@@ -208,65 +208,78 @@ public class AudioManagerEditor : UnityEditor.Editor
             mixerRect.x += (EditorGUIUtility.currentViewWidth * 0.5f)-mixerRect.x;
 
             Rect popupRect = new Rect(fieldRect.position, new Vector2(200, 10));
-            
+
             if (manager.tracks.Count - 1 >= index)
             {
-                manager.mixerIndex[index] = EditorGUI.Popup(mixerRect, manager.mixerIndex[index], manager.mixerGroupPopup.ToArray());
+                manager.mixerIndex[index] = EditorGUI.Popup(mixerRect, manager.mixerIndex[index],
+                    manager.mixerGroupPopup.ToArray());
                 if (manager.mixerGroupPopup.Count - 1 < manager.mixerIndex[index])
                 {
-                    if(manager.mixerGroupPopup.Count - 1 >= 0) manager.mixerIndex[index] -= 1;
+                    if (manager.mixerGroupPopup.Count - 1 >= 0) manager.mixerIndex[index] -= 1;
                     Debug.Log(manager.mixerIndex[index]);
                 }
+
                 FindMixerByID(manager.mixerIndex[index], index);
+
+
+                fieldRect.y += 30;
+
+                EditorGUI.LabelField(fieldRect, "Loop");
+
+                fieldRect.x = EditorGUIUtility.currentViewWidth * 0.5f + 15;
+
+                //Draw Loop
+                manager.tracks[index].loop = EditorGUI.Toggle(fieldRect, manager.tracks[index].loop);
+
+                fieldRect.y += 30;
+                fieldRect.x = x;
+
+                EditorGUI.LabelField(fieldRect, "Play Awake");
+
+                fieldRect.x = EditorGUIUtility.currentViewWidth * 0.5f + 15;
+
+                //Draw Loop
+                manager.tracks[index].playOnAwake = EditorGUI.Toggle(fieldRect, manager.tracks[index].playOnAwake);
+
+                fieldRect.x = x;
+
+                Space(ref fieldRect);
+                //Draw Clip
+                EditorGUI.PropertyField(fieldRect, clipField);
+
+                Space(ref fieldRect);
+                //Draw Name
+                EditorGUI.TextField(fieldRect, "Name", nameField.stringValue);
+
+                SerializedProperty priorityField = property.FindPropertyRelative("priority");
+                SerializedProperty volumeField = property.FindPropertyRelative("volume");
+                SerializedProperty pitchField = property.FindPropertyRelative("pitch");
+                SerializedProperty SpatialBlendField = property.FindPropertyRelative("spatialBlend");
+
+                var customLabel = new Label("LABEL");
+                //Draw Values
+                Space(ref fieldRect);
+                EditorGUI.IntSlider(fieldRect, priorityField, 0, 256);
+                Space(ref fieldRect);
+                EditorGUI.Slider(fieldRect, volumeField, 0f, 1f);
+                Space(ref fieldRect);
+                EditorGUI.Slider(fieldRect, pitchField, -3f, 3);
+                Space(ref fieldRect);
+                EditorGUI.Slider(fieldRect, SpatialBlendField, 0f, 1f);
+                Space(ref fieldRect);
+
+                Rect buttonRect = new Rect(fieldRect.position, new Vector2(50, fieldRect.height));
+                buttonRect.x += (EditorGUIUtility.currentViewWidth * 0.5f) - buttonRect.x;
+                if (GUI.Button(buttonRect, "X"))
+                {
+                    manager.tracks.Remove(manager.tracks.ElementAt(index));
+                    manager.mixerIndex.RemoveAt(index);
+                }
+
+                Space(ref fieldRect, 15);
+                DrawUILine(fieldRect.x, fieldRect.y);
+                Space(ref fieldRect);
             }
-
-            fieldRect.x = 0;
-            fieldRect.x = EditorGUIUtility.currentViewWidth - 100;
-            
-            //Draw Loop
-            manager.tracks[index].loop = EditorGUI.Toggle(fieldRect, manager.tracks[index].loop);
-
-            fieldRect.x += 25;
-            
-            EditorGUI.LabelField(fieldRect, "Loop");
-            
-            fieldRect.x = x;
-            
-            Space(ref fieldRect);
-            //Draw Clip
-            EditorGUI.PropertyField(fieldRect, clipField);
-            
-            Space(ref fieldRect);
-            //Draw Name
-            EditorGUI.TextField(fieldRect, "Name" , nameField.stringValue);
-
-            SerializedProperty priorityField = property.FindPropertyRelative("priority");
-            SerializedProperty volumeField = property.FindPropertyRelative("volume");
-            SerializedProperty pitchField = property.FindPropertyRelative("pitch");
-            SerializedProperty SpatialBlendField = property.FindPropertyRelative("spatialBlend");
-
-            var customLabel = new Label("LABEL");
-            //Draw Values
-            Space(ref fieldRect);
-            EditorGUI.IntSlider(fieldRect, priorityField, 0, 256);
-            Space(ref fieldRect);
-            EditorGUI.Slider(fieldRect, volumeField, 0f, 1f);
-            Space(ref fieldRect);
-            EditorGUI.Slider(fieldRect, pitchField, -3f, 3);
-            Space(ref fieldRect);
-            EditorGUI.Slider(fieldRect, SpatialBlendField, 0f, 1f);
-            Space(ref fieldRect);
-
-            Rect buttonRect = new Rect(fieldRect.position, new Vector2(50, fieldRect.height));
-            buttonRect.x += (EditorGUIUtility.currentViewWidth * 0.5f)-buttonRect.x;
-            if (GUI.Button(buttonRect, "X"))
-            {
-                manager.tracks.Remove(manager.tracks.ElementAt(index));
-                manager.mixerIndex.RemoveAt(index);
-            }
-            Space(ref fieldRect, 15);
-            DrawUILine(fieldRect.x, fieldRect.y);
-            Space(ref fieldRect);
         }
         else
         {

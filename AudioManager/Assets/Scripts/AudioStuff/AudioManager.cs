@@ -34,12 +34,13 @@ namespace AudioEngine
             public AudioClip clip;
             public AudioMixerGroup mixer;
 
-            public bool loop;
+            public bool playOnAwake = false;
+            public bool loop = false;
 
-            [Range(0, 256)] public int priority;
-            [Range(0f, 1f)] public float volume;
-            [Range(-3f, 3f)] public float pitch;
-            [Range(0f, 1f)] public float spatialBlend;
+            [Range(0, 256)] public int priority = 150;
+            [Range(0f, 1f)] public float volume = 1f;
+            [Range(-3f, 3f)] public float pitch = 1f;
+            [Range(0f, 1f)] public float spatialBlend = 0f;
 
             [HideInInspector] public AudioSource h_source;
             
@@ -63,7 +64,7 @@ namespace AudioEngine
             //Set the audio
             SetAudioInScene();
         }
-
+        
         #endregion
 
         #region Public Functions
@@ -72,15 +73,22 @@ namespace AudioEngine
         {
             foreach (AudioTrack t in tracks)
             {
+                //Set
                 t.h_source = gameObject.AddComponent<AudioSource>();
                 t.h_source.clip = t.clip;
                 t.h_source.outputAudioMixerGroup = t.mixer;
+                t.h_source.playOnAwake = t.playOnAwake;
                 t.h_source.loop = t.loop;
                 t.h_source.priority = t.priority;
                 t.h_source.volume = t.volume;
                 t.h_source.pitch = t.pitch;
                 t.h_source.spatialBlend = t.spatialBlend;
+                
+                
+                //Play Sounds on Awake
+                if(t.h_source.playOnAwake) t.h_source.Play();
             }
+            
         }
 
         public void PlayTrack(string name)

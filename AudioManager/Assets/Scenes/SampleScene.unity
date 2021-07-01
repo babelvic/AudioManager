@@ -369,7 +369,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b01ee15c5e878a544a9e243a7f89d46b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedScript: {fileID: 1536678467}
+  audioEvent:
+  - SelectedEventName: someEvent
+    TypeName: testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!1 &2098241564
 GameObject:
   m_ObjectHideFlags: 0
@@ -414,24 +416,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
-  tracks:
-  - name: BotonPlay
-    clip: {fileID: 8300000, guid: 28c780b296168144d8ec68261b4e8f25, type: 3}
-    mixer: {fileID: -6328668385672608837, guid: f1d81173983f4734dbd3ff9a49579828, type: 2}
-    loop: 1
-    priority: 105
-    volume: 0.387
-    pitch: 1.57
-    spatialBlend: 0.203
-    h_source: {fileID: 0}
+  tracks: []
   mixers:
   - name: Music
     mixerGroup: {fileID: -6328668385672608837, guid: f1d81173983f4734dbd3ff9a49579828, type: 2}
-    dropdownMixer: 1
+    dropdownMixer: 0
   - name: FX
     mixerGroup: {fileID: 9101494550402916091, guid: f1d81173983f4734dbd3ff9a49579828, type: 2}
-    dropdownMixer: 1
+    dropdownMixer: 0
   mixerGroupPopup:
   - Music
   - FX
-  mixerIndex: 00000000
+  mixerIndex: 

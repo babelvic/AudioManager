@@ -44,8 +44,6 @@ public class AudioPlayerEditor : Editor
 
      public override void OnInspectorGUI()
      {
-         base.OnInspectorGUI();
-         
          serializedObject.Update();
          
          //Horizontal Space for add and remove tracks
@@ -99,10 +97,6 @@ public class AudioPlayerEditor : Editor
                  if (scripts.Count > 0)
                  {
                      string[] scriptNames = scripts.Select(s => s.GetType().Name).ToArray();
-                 
-                     //int scriptIndex = EditorGUI.Popup(fieldRect, "Script", scripts.ToList().IndexOf(manager.audioEvent[index].selectedScript), scriptNames);
-                     //if (scriptIndex >= 0) manager.audioEvent[index].selectedScript = scripts[scriptIndex];
-                     //else if (scripts.Count > 0) manager.audioEvent[index].selectedScript = scripts[0];
 
                      Space(ref fieldRect);
 
@@ -119,7 +113,7 @@ public class AudioPlayerEditor : Editor
 
                      if (matchEvents.Count > 0)
                      {
-                         string[] methodNames = matchEvents.Select(e => $"{e.DeclaringType}/{e.Name}()").ToArray();
+                         string[] methodNames = matchEvents.Select(e => $"{e.DeclaringType} / {e.Name}()").ToArray();
                      
                          int methodIndex = EditorGUI.Popup(fieldRect, "Method", index, methodNames);
                          if (methodIndex >= 0)
