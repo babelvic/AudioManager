@@ -36,11 +36,16 @@ namespace AudioEngine
 
             public bool playOnAwake = false;
             public bool loop = false;
+            [InspectorName("3D Settings")]public bool dimensional = false;
 
             [Range(0, 256)] public int priority = 150;
             [Range(0f, 1f)] public float volume = 1f;
             [Range(-3f, 3f)] public float pitch = 1f;
             [Range(0f, 1f)] public float spatialBlend = 0f;
+
+            [InspectorName("3D Object Container")]public GameObject objectReference;
+            public float minDistance = 1f;
+            public float maxDistance = 500f;
 
             [HideInInspector] public AudioSource h_source;
             
@@ -73,22 +78,39 @@ namespace AudioEngine
         {
             foreach (AudioTrack t in tracks)
             {
-                //Set
-                t.h_source = gameObject.AddComponent<AudioSource>();
-                t.h_source.clip = t.clip;
-                t.h_source.outputAudioMixerGroup = t.mixer;
-                t.h_source.playOnAwake = t.playOnAwake;
-                t.h_source.loop = t.loop;
-                t.h_source.priority = t.priority;
-                t.h_source.volume = t.volume;
-                t.h_source.pitch = t.pitch;
-                t.h_source.spatialBlend = t.spatialBlend;
-                
-                
+                //Check if the audio is a 3d audio track //If there is an object reference then we can set the audio in the reference for setting it after
+                if (t.dimensional && t.objectReference != null)
+                {
+                    t.h_source = t.objectReference.AddComponent<AudioSource>();
+                    t.h_source.clip = t.clip;
+                    t.h_source.outputAudioMixerGroup = t.mixer;
+                    t.h_source.playOnAwake = t.playOnAwake;
+                    t.h_source.loop = t.loop;
+                    t.h_source.priority = t.priority;
+                    t.h_source.volume = t.volume;
+                    t.h_source.pitch = t.pitch;
+                    t.spatialBlend = 1f;
+                    t.h_source.spatialBlend = t.spatialBlend;
+                    t.h_source.minDistance = t.minDistance;
+                    t.h_source.maxDistance = t.maxDistance;
+                }
+                else
+                {
+                    //Normal Set
+                    t.h_source = gameObject.AddComponent<AudioSource>();
+                    t.h_source.clip = t.clip;
+                    t.h_source.outputAudioMixerGroup = t.mixer;
+                    t.h_source.playOnAwake = t.playOnAwake;
+                    t.h_source.loop = t.loop;
+                    t.h_source.priority = t.priority;
+                    t.h_source.volume = t.volume;
+                    t.h_source.pitch = t.pitch;
+                    t.h_source.spatialBlend = t.spatialBlend;
+                }
+
                 //Play Sounds on Awake
-                if(t.h_source.playOnAwake) t.h_source.Play();
+                if (t.h_source.playOnAwake) t.h_source.Play();
             }
-            
         }
 
         public void PlayTrack(string name)

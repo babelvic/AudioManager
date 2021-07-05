@@ -35,7 +35,7 @@ public class AudioPlayerEditor : Editor
          _reorderableAudioEvents.elementHeightCallback = delegate(int index) {
              var element = _reorderableAudioEvents.serializedProperty.GetArrayElementAtIndex(index);
              var margin = EditorGUIUtility.standardVerticalSpacing;
-             if (element.isExpanded) return 130 + margin;
+             if (element.isExpanded) return 98 + margin;
              else return 20 + margin;
          };
          
@@ -98,8 +98,6 @@ public class AudioPlayerEditor : Editor
                  {
                      string[] scriptNames = scripts.Select(s => s.GetType().Name).ToArray();
 
-                     Space(ref fieldRect);
-
                      List<EventInfo> allEvents = scripts.SelectMany(s => s.GetType().GetEvents()).ToList();
                      List<EventInfo> matchEvents = new List<EventInfo>();
                      
@@ -115,7 +113,7 @@ public class AudioPlayerEditor : Editor
                      {
                          string[] methodNames = matchEvents.Select(e => $"{e.DeclaringType} / {e.Name}()").ToArray();
                      
-                         int methodIndex = EditorGUI.Popup(fieldRect, "Method", index, methodNames);
+                         int methodIndex = EditorGUI.Popup(fieldRect, "Event Player", index, methodNames);
                          if (methodIndex >= 0)
                          {
                              manager.audioEvent[index].TypeName = matchEvents[methodIndex].DeclaringType.AssemblyQualifiedName;
