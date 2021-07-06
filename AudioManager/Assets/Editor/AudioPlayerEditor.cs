@@ -17,9 +17,13 @@ public class AudioPlayerEditor : Editor
 
      private ReorderableList _reorderableAudioEvents;
 
+     private bool selectAllEvents;
+
      private void OnEnable()
      {
          manager = target as AudioPlayer;
+
+         selectAllEvents = true;
 
          s_audioEvents = serializedObject.FindProperty(nameof(manager.audioEvent));
          
@@ -45,24 +49,47 @@ public class AudioPlayerEditor : Editor
      public override void OnInspectorGUI()
      {
          serializedObject.Update();
-         
-         //Horizontal Space for add and remove tracks
-         using (new EditorGUILayout.HorizontalScope())
+
+         using (new EditorGUILayout.VerticalScope("Box"))
          {
-             if (GUILayout.Button("Add Track"))
+
+             using (new EditorGUILayout.HorizontalScope("Box"))
              {
-                 manager.audioEvent.Add(new AudioPlayer.AudioEvent());
+                 EditorGUILayout.LabelField("Subscribe All Events");
+                 
+                 EditorGUILayout.Space();
+                 
+                 selectAllEvents = EditorGUILayout.Toggle(selectAllEvents);
+             
+                 EditorGUILayout.Space();
              }
 
-             GUILayout.Space(10f);
-
-             if (GUILayout.Button("Remove Track"))
+             if (selectAllEvents)
              {
-                 if(manager.audioEvent.Count - 1 >= 0) manager.audioEvent.RemoveAt(manager.audioEvent.Count-1);
+                 
              }
+             else
+             {
+                 //Horizontal Space for add and remove tracks
+                 using (new EditorGUILayout.HorizontalScope())
+                 {
+                     if (GUILayout.Button("Add Track"))
+                     {
+                         manager.audioEvent.Add(new AudioPlayer.AudioEvent());
+                     }
+
+                     GUILayout.Space(10f);
+
+                     if (GUILayout.Button("Remove Track"))
+                     {
+                         if (manager.audioEvent.Count - 1 >= 0) manager.audioEvent.RemoveAt(manager.audioEvent.Count - 1);
+                     }
+                 }
+
+                 _reorderableAudioEvents.DoLayoutList();
+             }
+
          }
-         
-         _reorderableAudioEvents.DoLayoutList();
 
          serializedObject.ApplyModifiedProperties();
      }

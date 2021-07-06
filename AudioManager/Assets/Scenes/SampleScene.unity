@@ -514,15 +514,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   tracks:
-  - name: 
-    clip: {fileID: 0}
+  - name: BossFightStart
+    clip: {fileID: 8300000, guid: 6321f18647e66f54dbf9ed2237c816c4, type: 3}
     mixer: {fileID: -6328668385672608837, guid: f1d81173983f4734dbd3ff9a49579828, type: 2}
-    playOnAwake: 0
-    loop: 0
+    playOnAwake: 1
+    loop: 1
+    dimensional: 1
     priority: 150
     volume: 1
     pitch: 1
-    spatialBlend: 0
+    spatialBlend: 1
+    objectReference: {fileID: 1536678465}
+    minDistance: 1
+    maxDistance: 500
     h_source: {fileID: 0}
   mixers:
   - name: Music

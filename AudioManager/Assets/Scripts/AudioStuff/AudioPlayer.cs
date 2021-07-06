@@ -30,6 +30,5 @@ public class AudioPlayer : MonoBehaviour
             Delegate handler = Delegate.CreateDelegate(SelectedEvent.EventHandlerType, AudioManager.instance , typeof(AudioManager).GetMethod("PlayTrack"));
             SelectedEvent.AddEventHandler(selectedComponent, handler);
         }
-        if(FindObjectOfType<AudioManager>().gameObject != null) Debug.Log("enable");
     }
 }
