@@ -10,6 +10,9 @@ public class testProperty : MonoBehaviour
     public List<AudioManager.AudioTrack> test1;
 
     public event Action<string> someEvent;
+    public event Action<string> otherEvent;
+    public event Action<string> noseEvent;
+    public event Action noEvent;
 
     private IEnumerator Start()
     {

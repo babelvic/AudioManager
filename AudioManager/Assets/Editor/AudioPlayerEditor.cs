@@ -17,13 +17,13 @@ public class AudioPlayerEditor : Editor
 
      private ReorderableList _reorderableAudioEvents;
 
-     private bool selectAllEvents;
+     
 
      private void OnEnable()
      {
          manager = target as AudioPlayer;
 
-         selectAllEvents = true;
+         manager.selectAllEvents = true;
 
          s_audioEvents = serializedObject.FindProperty(nameof(manager.audioEvent));
          
@@ -59,14 +59,26 @@ public class AudioPlayerEditor : Editor
                  
                  EditorGUILayout.Space();
                  
-                 selectAllEvents = EditorGUILayout.Toggle(selectAllEvents);
+                 manager.selectAllEvents = EditorGUILayout.Toggle(manager.selectAllEvents);
              
                  EditorGUILayout.Space();
              }
 
-             if (selectAllEvents)
+             if (manager.selectAllEvents)
              {
-                 
+                 List<MonoBehaviour> scripts = manager.GetComponents<MonoBehaviour>().Where(s => s.GetType().Name != manager.GetType().Name).ToList();
+
+                 List<EventInfo> matchEvents = GetMatchEvents(scripts);
+
+                 manager.allEvents = matchEvents;
+
+                 using (new EditorGUILayout.VerticalScope("Box"))
+                 {
+                     foreach (var mEvent in matchEvents)
+                     {
+                         EditorGUILayout.LabelField(mEvent.Name);
+                     }
+                 }
              }
              else
              {
@@ -123,18 +135,7 @@ public class AudioPlayerEditor : Editor
              
                  if (scripts.Count > 0)
                  {
-                     string[] scriptNames = scripts.Select(s => s.GetType().Name).ToArray();
-
-                     List<EventInfo> allEvents = scripts.SelectMany(s => s.GetType().GetEvents()).ToList();
-                     List<EventInfo> matchEvents = new List<EventInfo>();
-                     
-                     foreach (var eventInfo in allEvents)
-                     {
-                         if (eventInfo.EventHandlerType.GetMethod("Invoke").GetParameters().Select(p => p.GetType()).SequenceEqual(typeof(AudioManager).GetMethod("PlayTrack")?.GetParameters().Select(p => p.GetType())))
-                         {
-                             matchEvents.Add(eventInfo);
-                         }
-                     }
+                     List<EventInfo> matchEvents = GetMatchEvents(scripts);
 
                      if (matchEvents.Count > 0)
                      {
@@ -176,6 +177,22 @@ public class AudioPlayerEditor : Editor
                  manager.audioEvent.Remove(manager.audioEvent.ElementAt(index));
              }
          }
+     }
+
+     List<EventInfo> GetMatchEvents(List<MonoBehaviour> scripts)
+     {
+         List<EventInfo> allEvents = scripts.SelectMany(s => s.GetType().GetEvents()).ToList();
+         List<EventInfo> matchEvents = new List<EventInfo>();
+                     
+         foreach (var eventInfo in allEvents)
+         {
+             if (eventInfo.EventHandlerType.GetMethod("Invoke").GetParameters().Select(p => p.GetType()).SequenceEqual(typeof(AudioManager).GetMethod("PlayTrack")?.GetParameters().Select(p => p.GetType())))
+             {
+                 matchEvents.Add(eventInfo);
+             }
+         }
+
+         return matchEvents;
      }
      
      void DrawHeaderTracks(Rect rect)
