@@ -13,7 +13,8 @@ public class AudioPlayer : MonoBehaviour
     public bool selectAllEvents;
     
     //All events
-    public List<EventInfo> allEvents;
+    public List<string> allEventsNames;
+    public List<string> allEventsTypes;
     
     //Each event
     public List<AudioEvent> audioEvent;
@@ -30,16 +31,17 @@ public class AudioPlayer : MonoBehaviour
         if (selectAllEvents)
         {
             //Subscribe all the events with a string as parameter by using a list of events info
-            foreach (var mEvent in allEvents)
+            for (var i = 0; i < allEventsNames.Count; i++)
             {
-                string TypeName = mEvent.DeclaringType.AssemblyQualifiedName;
-                
-                Delegate handler = Delegate.CreateDelegate(mEvent.EventHandlerType, AudioManager.instance, typeof(AudioManager).GetMethod("PlayTrack"));
+                Type type = Type.GetType(allEventsTypes[i]);
+                EventInfo sEvent = type.GetEvent(allEventsNames[i]);
 
-                Type type = Type.GetType(TypeName);
                 Component selectedComponent = GetComponent(type);
+
+
+                Delegate handler = Delegate.CreateDelegate(sEvent.EventHandlerType, AudioManager.instance, typeof(AudioManager).GetMethod("PlayTrack"));
                 
-                mEvent.AddEventHandler(selectedComponent, handler);
+                sEvent.AddEventHandler(selectedComponent, handler);
             }
         }
         else

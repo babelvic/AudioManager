@@ -70,7 +70,11 @@ public class AudioPlayerEditor : Editor
 
                  List<EventInfo> matchEvents = GetMatchEvents(scripts);
 
-                 manager.allEvents = matchEvents;
+                 foreach (var mEvent in matchEvents)
+                 {
+                     manager.allEventsNames.Add(mEvent.Name);
+                     manager.allEventsTypes.Add(mEvent.DeclaringType.AssemblyQualifiedName);
+                 }
 
                  using (new EditorGUILayout.VerticalScope("Box"))
                  {
