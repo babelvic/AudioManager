@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using AudioEngine;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
@@ -13,6 +14,8 @@ public class testProperty : MonoBehaviour
     public event Action<string> otherEvent;
     public event Action<string> noseEvent;
     public event Action noEvent;
+
+    private string x;
 
     private IEnumerator Start()
     {

@@ -17,13 +17,16 @@ public class AudioPlayerEditor : Editor
 
      private ReorderableList _reorderableAudioEvents;
 
-     
+     private bool configuration;
+     private bool manually;
 
      private void OnEnable()
      {
          manager = target as AudioPlayer;
 
-         manager.selectAllEvents = true;
+         configuration = false;
+         
+         manager.selectAllEvents = false;
 
          s_audioEvents = serializedObject.FindProperty(nameof(manager.audioEvent));
          
@@ -52,57 +55,108 @@ public class AudioPlayerEditor : Editor
 
          using (new EditorGUILayout.VerticalScope("Box"))
          {
-
-             using (new EditorGUILayout.HorizontalScope("Box"))
+             if (GUILayout.Button((Texture) Resources.Load("ConfigLogo"),new GUIStyle(GUI.skin.button),GUILayout.Width(30), GUILayout.Height(30), GUILayout.ExpandWidth(true)))
              {
-                 EditorGUILayout.LabelField("Subscribe All Events");
-                 
-                 EditorGUILayout.Space();
-                 
-                 manager.selectAllEvents = EditorGUILayout.Toggle(manager.selectAllEvents);
-             
-                 EditorGUILayout.Space();
+                 configuration = !configuration;
              }
-
-             if (manager.selectAllEvents)
+             
+             if (!configuration)
              {
-                 List<MonoBehaviour> scripts = manager.GetComponents<MonoBehaviour>().Where(s => s.GetType().Name != manager.GetType().Name).ToList();
-
-                 List<EventInfo> matchEvents = GetMatchEvents(scripts);
-
-                 foreach (var mEvent in matchEvents)
+                 if (!manually)
                  {
-                     manager.allEventsNames.Add(mEvent.Name);
-                     manager.allEventsTypes.Add(mEvent.DeclaringType.AssemblyQualifiedName);
-                 }
-
-                 using (new EditorGUILayout.VerticalScope("Box"))
-                 {
-                     foreach (var mEvent in matchEvents)
+                     using (new EditorGUILayout.HorizontalScope("Box"))
                      {
-                         EditorGUILayout.LabelField(mEvent.Name);
+                         EditorGUILayout.LabelField("Subscribe All Events");
+                     
+                         EditorGUILayout.Space();
+                     
+                         manager.selectAllEvents = EditorGUILayout.Toggle(manager.selectAllEvents);
+                 
+                         EditorGUILayout.Space();
+                     }
+
+                     if (manager.selectAllEvents)
+                     {
+                         List<MonoBehaviour> scripts = manager.GetComponents<MonoBehaviour>().Where(s => s.GetType().Name != manager.GetType().Name).ToList();
+
+                         List<EventInfo> matchEvents = GetMatchEvents(scripts);
+
+                         foreach (var mEvent in matchEvents)
+                         {
+                             manager.allEventsNames.Add(mEvent.Name);
+                             manager.allEventsTypes.Add(mEvent.DeclaringType.AssemblyQualifiedName);
+                         }
+
+                         using (new EditorGUILayout.VerticalScope("Box"))
+                         {
+                             foreach (var mEvent in matchEvents)
+                             {
+                                 EditorGUILayout.LabelField(mEvent.Name);
+                             }
+                         }
+                     }
+                     else
+                     {
+                         //Horizontal Space for add and remove tracks
+                         using (new EditorGUILayout.HorizontalScope())
+                         {
+                             if (GUILayout.Button("Add Track"))
+                             {
+                                 manager.audioEvent.Add(new AudioPlayer.AudioEvent());
+                             }
+
+                             GUILayout.Space(10f);
+
+                             if (GUILayout.Button("Remove Track"))
+                             {
+                                 if (manager.audioEvent.Count - 1 >= 0) manager.audioEvent.RemoveAt(manager.audioEvent.Count - 1);
+                             }
+                         }
+
+                         _reorderableAudioEvents.DoLayoutList();
+                     }
+                 }
+                 else
+                 {
+                     using (new EditorGUILayout.VerticalScope("Box"))
+                     {
+                         if (GUILayout.Button("Create"))
+                         {
+                             //Crea todos los eventos y sus invocaciones
+                         }
+                         
+                         using (new EditorGUILayout.HorizontalScope())
+                         {
+                             if (GUILayout.Button("Add Event"))
+                             {
+                                 //Crea un preset de evento
+                             }
+                             
+                             if (GUILayout.Button("Remove Event"))
+                             {
+                                 //Elimina un preset de evento
+                             }
+                         }
+                         
+                         using (new EditorGUILayout.VerticalScope("Box"))
+                         {
+                             //Despliegue de cada evento
+                         }
                      }
                  }
              }
              else
              {
-                 //Horizontal Space for add and remove tracks
-                 using (new EditorGUILayout.HorizontalScope())
+                 using (new EditorGUILayout.HorizontalScope("Box"))
                  {
-                     if (GUILayout.Button("Add Track"))
-                     {
-                         manager.audioEvent.Add(new AudioPlayer.AudioEvent());
-                     }
-
-                     GUILayout.Space(10f);
-
-                     if (GUILayout.Button("Remove Track"))
-                     {
-                         if (manager.audioEvent.Count - 1 >= 0) manager.audioEvent.RemoveAt(manager.audioEvent.Count - 1);
-                     }
+                     EditorGUILayout.LabelField("Manually Invoking");
+                 
+                     EditorGUILayout.Space();
+                 
+                     manually = EditorGUILayout.Toggle(manually);
+             
+                     EditorGUILayout.Space();
                  }
-
-                 _reorderableAudioEvents.DoLayoutList();
              }
 
          }
