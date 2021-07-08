@@ -12,7 +12,20 @@ namespace AudioEngine
     public class AudioManager : MonoBehaviour
     {
         //Static reference for singleton pattern
-        public static AudioManager instance;
+        private static AudioManager _instance;
+
+        public static AudioManager Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = FindObjectOfType<AudioManager>();
+                }
+
+                return _instance;
+            }
+        }
 
         //A member for debuging or not messages from this class
         public bool debug;
@@ -63,7 +76,7 @@ namespace AudioEngine
 
         private void Awake()
         {
-            if (!instance) Configure();
+            if (!_instance) Configure();
             else Destroy(this.gameObject);
             
             //Set the audio
@@ -133,7 +146,7 @@ namespace AudioEngine
 
         private void Configure()
         {
-            instance = this;
+            _instance = this;
             DontDestroyOnLoad(this.gameObject);
         }
 

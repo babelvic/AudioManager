@@ -17,9 +17,13 @@ public class testProperty : MonoBehaviour
 
     private string x;
 
-    private IEnumerator Start()
+    private void Start()
     {
-        yield return new WaitForSeconds(0.1f);
         someEvent?.Invoke("BotonPlay");
+    }
+
+    public void testMethod()
+    {
+        
     }
 }

@@ -17,16 +17,11 @@ public class AudioPlayerEditor : Editor
 
      private ReorderableList _reorderableAudioEvents;
 
-     private bool configuration;
-     private bool manually;
+     
 
      private void OnEnable()
      {
          manager = target as AudioPlayer;
-
-         configuration = false;
-         
-         manager.selectAllEvents = false;
 
          s_audioEvents = serializedObject.FindProperty(nameof(manager.audioEvent));
          
@@ -55,14 +50,20 @@ public class AudioPlayerEditor : Editor
 
          using (new EditorGUILayout.VerticalScope("Box"))
          {
-             if (GUILayout.Button((Texture) Resources.Load("ConfigLogo"),new GUIStyle(GUI.skin.button),GUILayout.Width(30), GUILayout.Height(30), GUILayout.ExpandWidth(true)))
+             var settingsButtonStyle = new GUIStyle(GUI.skin.button)
              {
-                 configuration = !configuration;
+                 normal = new GUIStyleState() {textColor = new Color(.2f,.6f,.8f)}, fontSize = 20,
+                 font = (Font) Resources.Load("customFont"), alignment = TextAnchor.MiddleCenter
+             };
+             
+             if (GUILayout.Button("SETTINGS",settingsButtonStyle,GUILayout.Width(30), GUILayout.Height(30), GUILayout.ExpandWidth(true)))
+             {
+                 manager.configuration = !manager.configuration;
              }
              
-             if (!configuration)
+             if (!manager.configuration)
              {
-                 if (!manually)
+                 if (!manager.manually)
                  {
                      using (new EditorGUILayout.HorizontalScope("Box"))
                      {
@@ -120,6 +121,7 @@ public class AudioPlayerEditor : Editor
                  {
                      using (new EditorGUILayout.VerticalScope("Box"))
                      {
+                         
                          if (GUILayout.Button("Create"))
                          {
                              //Crea todos los eventos y sus invocaciones
@@ -141,6 +143,42 @@ public class AudioPlayerEditor : Editor
                          using (new EditorGUILayout.VerticalScope("Box"))
                          {
                              //Despliegue de cada evento
+                             
+                             EditorGUILayout.Space();
+                             List<MonoBehaviour> scripts = manager.GetComponents<MonoBehaviour>().Where(s => s.GetType().Name != manager.GetType().Name).ToList();
+
+                             if (scripts.Count > 0)
+                             {
+                                 string[] scriptsNames = scripts.Select(s => s.GetType().Name).ToArray();
+
+                                 int scriptIndex = EditorGUILayout.Popup("Script",scripts.ToList().IndexOf(manager.selectedScript), scriptsNames);
+                                 if (scriptIndex >= 0) manager.selectedScript = scripts[scriptIndex];
+                                 else if (scripts.Count > 0) manager.selectedScript = scripts[0];
+                                 
+                                 EditorGUILayout.Space();
+
+                                 List<MethodInfo> methods = manager.selectedScript.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(m => m.DeclaringType == manager.selectedScript.GetType() &&  !m.IsSpecialName).ToList();
+                                 
+                                 if (methods.Count > 0)
+                                 {
+                                     string[] methodsNames = methods.Select(m => m.Name).ToArray();
+
+                                     int methodIndex = EditorGUILayout.Popup("Method", methods.ToList().IndexOf(manager.selectedMethod), methodsNames);
+                                     if (methodIndex >= 0) manager.selectedMethod = methods[methodIndex];
+                                     else manager.selectedMethod = methods[0];
+                                     
+                                     EditorGUILayout.Space();
+                                 }
+                             }
+
+                             string[] tracksNames = AudioManager.Instance.tracks.Select(t => t.name).ToArray();
+                             
+                             int trackIndex = EditorGUILayout.Popup("Track", tracksNames.ToList().IndexOf(manager.selectedTrack), tracksNames);
+                             if (trackIndex >= 0) manager.selectedTrack = tracksNames[trackIndex];
+                             else manager.selectedTrack = tracksNames[0];
+                             
+                             EditorGUILayout.Space();
+
                          }
                      }
                  }
@@ -153,7 +191,7 @@ public class AudioPlayerEditor : Editor
                  
                      EditorGUILayout.Space();
                  
-                     manually = EditorGUILayout.Toggle(manually);
+                     manager.manually = EditorGUILayout.Toggle(manager.manually);
              
                      EditorGUILayout.Space();
                  }

@@ -369,9 +369,116 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b01ee15c5e878a544a9e243a7f89d46b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectAllEvents: 0
+  allEventsNames:
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  allEventsTypes:
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   audioEvent:
   - SelectedEventName: someEvent
     TypeName: testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  selectedScript: {fileID: 1536678467}
+  selectedTrack: 
 --- !u!1 &2098241564
 GameObject:
   m_ObjectHideFlags: 0

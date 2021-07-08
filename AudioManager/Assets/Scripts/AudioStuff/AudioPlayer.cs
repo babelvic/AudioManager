@@ -11,6 +11,8 @@ using UnityEngine.UI;
 public class AudioPlayer : MonoBehaviour
 {
     public bool selectAllEvents;
+    public bool configuration;
+    public bool manually;
     
     //All events
     public List<string> allEventsNames;
@@ -18,6 +20,11 @@ public class AudioPlayer : MonoBehaviour
     
     //Each event
     public List<AudioEvent> audioEvent;
+    
+    //Event creation
+    public MonoBehaviour selectedScript;
+    public MethodInfo selectedMethod;
+    public string selectedTrack;
 
     [System.Serializable]
     public class AudioEvent
@@ -26,7 +33,8 @@ public class AudioPlayer : MonoBehaviour
         public string TypeName;
     }
 
-    private void Start()
+
+    private void Awake()
     {
         if (selectAllEvents)
         {
@@ -39,7 +47,7 @@ public class AudioPlayer : MonoBehaviour
                 Component selectedComponent = GetComponent(type);
 
 
-                Delegate handler = Delegate.CreateDelegate(sEvent.EventHandlerType, AudioManager.instance, typeof(AudioManager).GetMethod("PlayTrack"));
+                Delegate handler = Delegate.CreateDelegate(sEvent.EventHandlerType, AudioManager.Instance, typeof(AudioManager).GetMethod("PlayTrack"));
                 
                 sEvent.AddEventHandler(selectedComponent, handler);
             }
@@ -54,7 +62,7 @@ public class AudioPlayer : MonoBehaviour
 
                 Component selectedComponent = GetComponent(type);
 
-                Delegate handler = Delegate.CreateDelegate(SelectedEvent.EventHandlerType, AudioManager.instance , typeof(AudioManager).GetMethod("PlayTrack"));
+                Delegate handler = Delegate.CreateDelegate(SelectedEvent.EventHandlerType, AudioManager.Instance , typeof(AudioManager).GetMethod("PlayTrack"));
                 SelectedEvent.AddEventHandler(selectedComponent, handler);
             }
         }
