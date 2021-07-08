@@ -20,11 +20,17 @@ public class AudioPlayer : MonoBehaviour
     
     //Each event
     public List<AudioEvent> audioEvent;
+
+    public List<EventCreator> eventCreator;
     
     //Event creation
-    public MonoBehaviour selectedScript;
-    public MethodInfo selectedMethod;
-    public string selectedTrack;
+    [System.Serializable]
+    public class EventCreator
+    {
+        public MonoBehaviour selectedScript;
+        public MethodInfo selectedMethod;
+        public string selectedTrack;
+    }
 
     [System.Serializable]
     public class AudioEvent
