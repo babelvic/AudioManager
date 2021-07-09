@@ -52,13 +52,13 @@ public class AudioPlayerEditor : Editor
          _reorderableEventCreators = new ReorderableList(serializedObject, s_eventCreators, true, true, false, false);
          _reorderableEventCreators.drawHeaderCallback = DrawHeaderEvents;
          _reorderableEventCreators.drawElementCallback = DrawEventCreator;
-         _reorderableEventCreators.drawFooterCallback = DrawFooterTracks;
+         _reorderableEventCreators.drawFooterCallback = DrawFooterEvents;
          _reorderableEventCreators.drawNoneElementCallback = DrawBackgroundNoEvents;
          
          _reorderableEventCreators.elementHeightCallback = delegate(int index) {
              var element = _reorderableEventCreators.serializedProperty.GetArrayElementAtIndex(index);
              var margin = EditorGUIUtility.standardVerticalSpacing;
-             if (element.isExpanded) return 98 + margin;
+             if (element.isExpanded) return 115 + margin;
              else return 20 + margin;
          };
 
@@ -263,7 +263,7 @@ public class AudioPlayerEditor : Editor
 
      public void DrawEventCreator(Rect position, int index, bool isActive, bool isFocused)
      {
-         SerializedProperty property = _reorderableAudioEvents.serializedProperty.GetArrayElementAtIndex(index);
+         SerializedProperty property = _reorderableEventCreators.serializedProperty.GetArrayElementAtIndex(index);
          
          position.width -= 34;
          position.height = 18;
@@ -281,7 +281,7 @@ public class AudioPlayerEditor : Editor
         
          Rect fieldRect = new Rect(position);
          
-         Space(ref fieldRect, 15);
+         Space(ref fieldRect, 30);
          
          List<MonoBehaviour> scripts = manager.GetComponents<MonoBehaviour>().Where(s => s.GetType().Name != manager.GetType().Name).ToList();
 
@@ -317,45 +317,14 @@ public class AudioPlayerEditor : Editor
              int trackIndex = EditorGUI.Popup(fieldRect, tracksNames.ToList().IndexOf(manager.eventCreator[index].selectedTrack), tracksNames);
              if (trackIndex >= 0) manager.eventCreator[index].selectedTrack = tracksNames[trackIndex];
              else manager.eventCreator[index].selectedTrack = tracksNames[0];
-         }
-         
-         
-         /*
-            EditorGUILayout.Space();
-             List<MonoBehaviour> scripts = manager.GetComponents<MonoBehaviour>().Where(s => s.GetType().Name != manager.GetType().Name).ToList();
-
-             if (scripts.Count > 0)
-             {
-                 string[] scriptsNames = scripts.Select(s => s.GetType().Name).ToArray();
-
-                 int scriptIndex = EditorGUILayout.Popup("Script",scripts.ToList().IndexOf(manager.selectedScript), scriptsNames);
-                 if (scriptIndex >= 0) manager.selectedScript = scripts[scriptIndex];
-                 else if (scripts.Count > 0) manager.selectedScript = scripts[0];
-                 
-                 EditorGUILayout.Space();
-
-                 List<MethodInfo> methods = manager.selectedScript.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(m => m.DeclaringType == manager.selectedScript.GetType() &&  !m.IsSpecialName).ToList();
-                 
-                 if (methods.Count > 0)
-                 {
-                     string[] methodsNames = methods.Select(m => m.Name).ToArray();
-
-                     int methodIndex = EditorGUILayout.Popup("Method", methods.ToList().IndexOf(manager.selectedMethod), methodsNames);
-                     if (methodIndex >= 0) manager.selectedMethod = methods[methodIndex];
-                     else manager.selectedMethod = methods[0];
+             
+             Space(ref fieldRect, 15);
                      
-                     EditorGUILayout.Space();
-                 }
-             }
-
-             string[] tracksNames = AudioManager.Instance.tracks.Select(t => t.name).ToArray();
+             DrawUILine(fieldRect.x, fieldRect.y);
+                     
+             Space(ref fieldRect);
              
-             int trackIndex = EditorGUILayout.Popup("Track", tracksNames.ToList().IndexOf(manager.selectedTrack), tracksNames);
-             if (trackIndex >= 0) manager.selectedTrack = tracksNames[trackIndex];
-             else manager.selectedTrack = tracksNames[0];
-             
-             EditorGUILayout.Space();
-             */
+         }
      }
 
      List<EventInfo> GetMatchEvents(List<MonoBehaviour> scripts)
@@ -391,6 +360,14 @@ public class AudioPlayerEditor : Editor
      }
     
      void DrawFooterTracks(Rect rect)
+     {
+         var  blueStylePreset = new GUIStyle(GUI.skin.label);
+         blueStylePreset.normal.textColor = new Color(.1f, .6f, .8f);
+         string name = "By @babelgames_es";
+         EditorGUI.LabelField(rect, name, blueStylePreset);
+     }
+     
+     void DrawFooterEvents(Rect rect)
      {
          var  blueStylePreset = new GUIStyle(GUI.skin.label);
          blueStylePreset.normal.textColor = new Color(.1f, .6f, .8f);
