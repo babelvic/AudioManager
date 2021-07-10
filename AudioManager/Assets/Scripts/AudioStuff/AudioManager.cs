@@ -43,6 +43,7 @@ namespace AudioEngine
         [System.Serializable]
         public class AudioTrack
         {
+            public bool autoName = true;
             public string name;
             public AudioClip clip;
             public AudioMixerGroup mixer;

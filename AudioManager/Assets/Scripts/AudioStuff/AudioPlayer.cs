@@ -30,6 +30,9 @@ public class AudioPlayer : MonoBehaviour
         public MonoBehaviour selectedScript;
         public MethodInfo selectedMethod;
         public string selectedTrack;
+
+        public bool autoName = true;
+        public string eventName;
     }
 
     [System.Serializable]

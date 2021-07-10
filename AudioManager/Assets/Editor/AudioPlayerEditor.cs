@@ -58,7 +58,7 @@ public class AudioPlayerEditor : Editor
          _reorderableEventCreators.elementHeightCallback = delegate(int index) {
              var element = _reorderableEventCreators.serializedProperty.GetArrayElementAtIndex(index);
              var margin = EditorGUIUtility.standardVerticalSpacing;
-             if (element.isExpanded) return 115 + margin;
+             if (element.isExpanded) return 215 + margin;
              else return 20 + margin;
          };
 
@@ -157,7 +157,7 @@ public class AudioPlayerEditor : Editor
                              
                              if (GUILayout.Button("Remove Event"))
                              {
-                                 manager.eventCreator.RemoveAt(manager.eventCreator.Count-1);
+                                 if(manager.eventCreator.Count > 0) manager.eventCreator.RemoveAt(manager.eventCreator.Count-1);
                              }
                          }
                          
@@ -263,67 +263,169 @@ public class AudioPlayerEditor : Editor
 
      public void DrawEventCreator(Rect position, int index, bool isActive, bool isFocused)
      {
-         SerializedProperty property = _reorderableEventCreators.serializedProperty.GetArrayElementAtIndex(index);
-         
-         position.width -= 34;
-         position.height = 18;
-        
-         Rect dropdownRect = new Rect(position);
-         dropdownRect.width = 10;
-         dropdownRect.height = 10;
-         dropdownRect.x += 10;
-         dropdownRect.y += 5;
-         
-         property.isExpanded = EditorGUI.Foldout(dropdownRect, property.isExpanded, "Event Creator");
-         
-         position.x += 50;
-         position.width -= 15;
-        
-         Rect fieldRect = new Rect(position);
-         
-         Space(ref fieldRect, 30);
-         
-         List<MonoBehaviour> scripts = manager.GetComponents<MonoBehaviour>().Where(s => s.GetType().Name != manager.GetType().Name).ToList();
-
-         if (property.isExpanded)
+         if (manager.eventCreator.Count - 1 >= index)
          {
-             if (scripts.Count > 0)
+             SerializedProperty property = _reorderableEventCreators.serializedProperty.GetArrayElementAtIndex(index);
+             
+             position.width -= 34;
+             position.height = 18;
+            
+             Rect dropdownRect = new Rect(position);
+             dropdownRect.width = 10;
+             dropdownRect.height = 10;
+             dropdownRect.x += 10;
+             dropdownRect.y += 5;
+             
+             property.isExpanded = EditorGUI.Foldout(dropdownRect, property.isExpanded, "Event Creator");
+             
+             position.x += 10;
+             position.width -= 15;
+            
+             Rect fieldRect = new Rect(position);
+             
+             Space(ref fieldRect, 30);
+
+             List<MonoBehaviour> scripts = manager.GetComponents<MonoBehaviour>()
+                 .Where(s => s.GetType().Name != manager.GetType().Name).ToList();
+
+             if (property.isExpanded)
              {
-                 string[] scriptsNames = scripts.Select(s => s.GetType().Name).ToArray();
-
-                 int scriptIndex = EditorGUI.Popup(fieldRect, scripts.ToList().IndexOf(manager.eventCreator[index].selectedScript), scriptsNames);
-                 if (scriptIndex >= 0) manager.eventCreator[index].selectedScript = scripts[scriptIndex];
-                 else if (scripts.Count > 0) manager.eventCreator[index].selectedScript = scripts[0];
-                 
-                 Space(ref fieldRect);
-                 
-                 List<MethodInfo> methods = manager.eventCreator[index].selectedScript.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(m => m.DeclaringType ==  manager.eventCreator[index].selectedScript.GetType() &&  !m.IsSpecialName).ToList();
-                 
-                 if (methods.Count > 0)
+                 float x = fieldRect.x;
+                 if (scripts.Count > 0)
                  {
-                     string[] methodsNames = methods.Select(m => m.Name).ToArray();
+                     string[] scriptsNames = scripts.Select(s => s.GetType().Name).ToArray();
 
-                     int methodIndex = EditorGUI.Popup(fieldRect, methods.ToList().IndexOf( manager.eventCreator[index].selectedMethod), methodsNames);
-                     if (methodIndex >= 0)  manager.eventCreator[index].selectedMethod = methods[methodIndex];
-                     else  manager.eventCreator[index].selectedMethod = methods[0];
-                     
+                     EditorGUI.LabelField(fieldRect, "Script");
+
+                     fieldRect.x += 100;
+
+                     int scriptIndex =
+                         EditorGUI.Popup(
+                             new Rect(fieldRect.position,
+                                 new Vector2(EditorGUIUtility.currentViewWidth - fieldRect.x - 50, 20)),
+                             scripts.ToList().IndexOf(manager.eventCreator[index].selectedScript), scriptsNames);
+                     if (scriptIndex >= 0) manager.eventCreator[index].selectedScript = scripts[scriptIndex];
+                     else if (scripts.Count > 0) manager.eventCreator[index].selectedScript = scripts[0];
+
                      Space(ref fieldRect);
+
+                     List<MethodInfo> methods = manager.eventCreator[index].selectedScript.GetType()
+                         .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(m =>
+                             m.DeclaringType == manager.eventCreator[index].selectedScript.GetType() &&
+                             !m.IsSpecialName).ToList();
+
+                     if (methods.Count > 0)
+                     {
+                         string[] methodsNames = methods.Select(m => m.Name).ToArray();
+
+                         fieldRect.x = x;
+                         EditorGUI.LabelField(fieldRect, "Method");
+
+                         fieldRect.x += 100;
+
+                         int methodIndex =
+                             EditorGUI.Popup(
+                                 new Rect(fieldRect.position,
+                                     new Vector2(EditorGUIUtility.currentViewWidth - fieldRect.x - 50, 20)),
+                                 methods.ToList().IndexOf(manager.eventCreator[index].selectedMethod), methodsNames);
+                         if (methodIndex >= 0) manager.eventCreator[index].selectedMethod = methods[methodIndex];
+                         else manager.eventCreator[index].selectedMethod = methods[0];
+
+                         Space(ref fieldRect);
+                     }
+
                  }
-                 
+
+                 string[] tracksNames = AudioManager.Instance.tracks.Select(t => t.name).ToArray();
+
+                 fieldRect.x = x;
+                 EditorGUI.LabelField(fieldRect, "Track");
+
+                 fieldRect.x += 100;
+
+                 int trackIndex =
+                     EditorGUI.Popup(
+                         new Rect(fieldRect.position,
+                             new Vector2(EditorGUIUtility.currentViewWidth - fieldRect.x - 50, 20)),
+                         tracksNames.ToList().IndexOf(manager.eventCreator[index].selectedTrack), tracksNames);
+                 if (trackIndex >= 0) manager.eventCreator[index].selectedTrack = tracksNames[trackIndex];
+                 else manager.eventCreator[index].selectedTrack = tracksNames[0];
+
+                 Space(ref fieldRect);
+
+                 fieldRect.x = x;
+                 EditorGUI.LabelField(fieldRect, "Auto name");
+
+                 fieldRect.x += 100;
+
+                 manager.eventCreator[index].autoName =
+                     EditorGUI.Toggle(fieldRect, manager.eventCreator[index].autoName);
+
+                 if (manager.eventCreator[index].autoName)
+                 {
+                     Space(ref fieldRect);
+
+                     fieldRect.x = x;
+
+                     EditorGUI.LabelField(fieldRect, "Event Name");
+
+                     fieldRect.x += 100;
+
+                     if (tracksNames.Length - 1 >= trackIndex && trackIndex >= 0)
+                     {
+                         manager.eventCreator[index].eventName = $"{tracksNames[trackIndex]}Event";
+                         EditorGUI.LabelField(
+                             new Rect(fieldRect.position,
+                                 new Vector2(EditorGUIUtility.currentViewWidth - fieldRect.x - 50, 20)),
+                             manager.eventCreator[index].eventName, new GUIStyle(GUI.skin.box));
+                     }
+                 }
+                 else
+                 {
+                     Space(ref fieldRect);
+
+                     fieldRect.x = x;
+
+                     EditorGUI.LabelField(fieldRect, "Event Name");
+
+                     fieldRect.x += 100;
+
+                     manager.eventCreator[index].eventName = EditorGUI.TextField(
+                         new Rect(fieldRect.position,
+                             new Vector2(EditorGUIUtility.currentViewWidth - fieldRect.x - 50, 20)),
+                         manager.eventCreator[index].eventName);
+
+                 }
+
+
+                 Space(ref fieldRect, 40);
+
+                 Rect buttonRect = new Rect(fieldRect.position, new Vector2(50, fieldRect.height));
+                 buttonRect.x += (EditorGUIUtility.currentViewWidth * 0.5f) - buttonRect.x;
+                 if (GUI.Button(buttonRect, "X"))
+                 {
+                     manager.eventCreator.Remove(manager.eventCreator.ElementAt(index));
+                 }
+
+                 Space(ref fieldRect, 15);
+
+                 fieldRect.x = x + 40;
+
+                 DrawUILine(fieldRect.x, fieldRect.y);
+
+                 Space(ref fieldRect);
+
              }
-             
-             string[] tracksNames = AudioManager.Instance.tracks.Select(t => t.name).ToArray();
-             
-             int trackIndex = EditorGUI.Popup(fieldRect, tracksNames.ToList().IndexOf(manager.eventCreator[index].selectedTrack), tracksNames);
-             if (trackIndex >= 0) manager.eventCreator[index].selectedTrack = tracksNames[trackIndex];
-             else manager.eventCreator[index].selectedTrack = tracksNames[0];
-             
-             Space(ref fieldRect, 15);
-                     
-             DrawUILine(fieldRect.x, fieldRect.y);
-                     
-             Space(ref fieldRect);
-             
+             else
+             {
+                 Rect buttonRect = new Rect(dropdownRect.position, new Vector2(50, 20));
+                 buttonRect.y -= 5;
+                 buttonRect.x += (EditorGUIUtility.currentViewWidth - (buttonRect.x * 2.5f));
+                 if (GUI.Button(buttonRect, "X"))
+                 {
+                     manager.eventCreator.Remove(manager.eventCreator.ElementAt(index));
+                 }
+             }
          }
      }
 

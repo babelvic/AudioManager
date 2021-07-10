@@ -14,6 +14,7 @@ using UnityEditorInternal;
 using UnityEngine.Audio;
 using UnityEngine.Timeline;
 using UnityEngine.UIElements;
+using Random = UnityEngine.Random;
 
 [CustomEditor(typeof(AudioManager))]
 public class AudioManagerEditor : UnityEditor.Editor
@@ -182,14 +183,7 @@ public class AudioManagerEditor : UnityEditor.Editor
         Rect fieldRect = new Rect(position);
         
         SerializedProperty clipField = property.FindPropertyRelative("clip");
-        
-        SerializedProperty nameField = property.FindPropertyRelative(nameof(AudioManager.AudioTrack.name));
-        
-        if (clipField.objectReferenceValue != null)
-        {
-            nameField.stringValue = ((AudioClip) clipField.objectReferenceValue).name;
-        }
-        
+
         if (property.isExpanded)
         {
             Space(ref fieldRect, 20f);
@@ -241,10 +235,38 @@ public class AudioManagerEditor : UnityEditor.Editor
                 Space(ref fieldRect);
                 //Draw Clip
                 EditorGUI.PropertyField(fieldRect, clipField);
-
+                
                 Space(ref fieldRect);
-                //Draw Name
-                EditorGUI.TextField(fieldRect, "Name", nameField.stringValue);
+                //AutoNaming
+                manager.tracks[index].autoName = EditorGUI.Toggle(fieldRect, "Auto Name", manager.tracks[index].autoName);
+                
+                SerializedProperty nameField = property.FindPropertyRelative(nameof(AudioManager.AudioTrack.name));
+
+                if (manager.tracks[index].autoName)
+                {
+                    Space(ref fieldRect);
+                    //Draw Name
+                    if (clipField.objectReferenceValue != null)
+                    {
+                        if (nameField.stringValue.Reverse().ToString().Substring(3).Reverse() == ((AudioClip) clipField.objectReferenceValue).name)
+                        {
+                            if (!(nameField.stringValue != ((AudioClip) clipField.objectReferenceValue).name && nameField.stringValue != string.Empty))
+                            {
+                                nameField.stringValue = ((AudioClip) clipField.objectReferenceValue).name;
+
+                                
+                            }
+                        }
+                    }
+
+                    EditorGUI.LabelField(fieldRect, "Name", nameField.stringValue, new GUIStyle(GUI.skin.box));
+                }
+                else
+                {
+                    Space(ref fieldRect);
+                    //Set your own name
+                    nameField.stringValue = EditorGUI.TextField(fieldRect, "Name", nameField.stringValue);
+                }
 
                 SerializedProperty priorityField = property.FindPropertyRelative("priority");
                 SerializedProperty volumeField = property.FindPropertyRelative("volume");
@@ -324,12 +346,39 @@ public class AudioManagerEditor : UnityEditor.Editor
         GetDropdownLabelTracks(index);
     }
 
+     string GetPrefix(string actualName, int index)
+     {
+         string prefix = "";
+         
+         for (int i = 0; i < manager.tracks.Count; i++)
+         {
+             if (actualName == manager.tracks[i].name && index != i)
+             {
+                 //Get another name
+                 char[] alphabet = "abcdefghijklmnopqrstuvwxyz".ToCharArray();
+
+                 System.Random rnd = new System.Random(Mathf.CeilToInt(Time.time));
+
+                 for (int j = 0; j < 3; j++)
+                 {
+                     int sNum = rnd.Next(0, alphabet.Length - 1);
+
+                     prefix += alphabet[sNum];
+                 }
+
+                 break;
+             }
+         }
+
+         return prefix;
+     }
+
      void GetHeight()
      {
          _reorderableTracks.elementHeightCallback = delegate(int index) {
              var element = _reorderableTracks.serializedProperty.GetArrayElementAtIndex(index);
              var margin = EditorGUIUtility.standardVerticalSpacing;
-             if (element.isExpanded) return (manager.tracks[index].dimensional) == true ? 430 : 340 + margin;
+             if (element.isExpanded) return (manager.tracks[index].dimensional) == true ? 460 : 370 + margin;
              else return 20 + margin;
          };
          
