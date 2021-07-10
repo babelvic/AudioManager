@@ -248,14 +248,37 @@ public class AudioManagerEditor : UnityEditor.Editor
                     //Draw Name
                     if (clipField.objectReferenceValue != null)
                     {
-                        if (nameField.stringValue.Reverse().ToString().Substring(3).Reverse() == ((AudioClip) clipField.objectReferenceValue).name)
+                        if (nameField.stringValue.Contains(((AudioClip) clipField.objectReferenceValue).name))
                         {
-                            if (!(nameField.stringValue != ((AudioClip) clipField.objectReferenceValue).name && nameField.stringValue != string.Empty))
+                            if (nameField.stringValue == ((AudioClip) clipField.objectReferenceValue).name)
                             {
-                                nameField.stringValue = ((AudioClip) clipField.objectReferenceValue).name;
-
-                                
+                                for (int i = 0; i < manager.tracks.Count; i++)
+                                {
+                                    if (nameField.stringValue == manager.tracks[i].name && index != i)
+                                    {
+                                        if(index > i) nameField.stringValue += GetPrefix().ToUpper();
+                                    }
+                                }
                             }
+                            else
+                            {
+                                int trackWithNameCount = 0;
+                                for (int i = 0; i < manager.tracks.Count; i++)
+                                {
+                                    if (manager.tracks[i].clip != null)
+                                    {
+                                        if (manager.tracks[i].name.Contains(manager.tracks[i].clip.name))
+                                        {
+                                            trackWithNameCount++;
+                                        }
+                                    }
+                                }
+                                if(trackWithNameCount <= 1) nameField.stringValue = ((AudioClip) clipField.objectReferenceValue).name;
+                            }
+                        }
+                        else
+                        {
+                            nameField.stringValue = ((AudioClip) clipField.objectReferenceValue).name;
                         }
                     }
 
@@ -346,28 +369,19 @@ public class AudioManagerEditor : UnityEditor.Editor
         GetDropdownLabelTracks(index);
     }
 
-     string GetPrefix(string actualName, int index)
+     string GetPrefix()
      {
          string prefix = "";
          
-         for (int i = 0; i < manager.tracks.Count; i++)
+         char[] alphabet = "abcdefghijklmnopqrstuvwxyz".ToCharArray();
+
+         System.Random rnd = new System.Random(Mathf.CeilToInt(Time.time));
+
+         for (int j = 0; j < 3; j++)
          {
-             if (actualName == manager.tracks[i].name && index != i)
-             {
-                 //Get another name
-                 char[] alphabet = "abcdefghijklmnopqrstuvwxyz".ToCharArray();
+             int sNum = rnd.Next(0, alphabet.Length - 1);
 
-                 System.Random rnd = new System.Random(Mathf.CeilToInt(Time.time));
-
-                 for (int j = 0; j < 3; j++)
-                 {
-                     int sNum = rnd.Next(0, alphabet.Length - 1);
-
-                     prefix += alphabet[sNum];
-                 }
-
-                 break;
-             }
+             prefix += alphabet[sNum];
          }
 
          return prefix;
