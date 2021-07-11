@@ -77,9 +77,15 @@ namespace AudioEngine
 
         private void Awake()
         {
-            if (!_instance) Configure();
-            else Destroy(this.gameObject);
-            
+            if (FindObjectsOfType<AudioManager>().Length > 1)
+            {
+                Destroy(this.gameObject);
+            }
+            else
+            {
+                DontDestroyOnLoad(this.gameObject);
+            }
+
             //Set the audio
             SetAudioInScene();
         }
@@ -142,16 +148,6 @@ namespace AudioEngine
         #endregion
         
         #region Private Functions
-
-        #region Setting Functions
-
-        private void Configure()
-        {
-            _instance = this;
-            DontDestroyOnLoad(this.gameObject);
-        }
-
-        #endregion
 
         #region Logs Functions
 

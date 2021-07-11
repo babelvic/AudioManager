@@ -20,7 +20,7 @@ public class AudioPlayerEditor : Editor
 
      private ReorderableList _reorderableEventCreators;
 
-     
+     private bool setH_Event;
 
      private void OnEnable()
      {
@@ -54,6 +54,8 @@ public class AudioPlayerEditor : Editor
          _reorderableEventCreators.drawElementCallback = DrawEventCreator;
          _reorderableEventCreators.drawFooterCallback = DrawFooterEvents;
          _reorderableEventCreators.drawNoneElementCallback = DrawBackgroundNoEvents;
+
+         setH_Event = false;
          
          _reorderableEventCreators.elementHeightCallback = delegate(int index) {
              var element = _reorderableEventCreators.serializedProperty.GetArrayElementAtIndex(index);
@@ -336,67 +338,74 @@ public class AudioPlayerEditor : Editor
 
                  }
 
-                 string[] tracksNames = AudioManager.Instance.tracks.Select(t => t.name).ToArray();
-
-                 fieldRect.x = x;
-                 EditorGUI.LabelField(fieldRect, "Track");
-
-                 fieldRect.x += 100;
-
-                 int trackIndex =
-                     EditorGUI.Popup(
-                         new Rect(fieldRect.position,
-                             new Vector2(EditorGUIUtility.currentViewWidth - fieldRect.x - 50, 20)),
-                         tracksNames.ToList().IndexOf(manager.eventCreator[index].selectedTrack), tracksNames);
-                 if (trackIndex >= 0) manager.eventCreator[index].selectedTrack = tracksNames[trackIndex];
-                 else manager.eventCreator[index].selectedTrack = tracksNames[0];
-
-                 Space(ref fieldRect);
-
-                 fieldRect.x = x;
-                 EditorGUI.LabelField(fieldRect, "Auto name");
-
-                 fieldRect.x += 100;
-
-                 manager.eventCreator[index].autoName =
-                     EditorGUI.Toggle(fieldRect, manager.eventCreator[index].autoName);
-
-                 if (manager.eventCreator[index].autoName)
+                 if (AudioManager.Instance.tracks.Count > 0)
                  {
-                     Space(ref fieldRect);
+                     if(setH_Event) GetEventHeight();
+                     
+                     string[] tracksNames = AudioManager.Instance.tracks.Select(t => t.name).ToArray();
 
                      fieldRect.x = x;
-
-                     EditorGUI.LabelField(fieldRect, "Event Name");
+                     EditorGUI.LabelField(fieldRect, "Track");
 
                      fieldRect.x += 100;
 
-                     if (tracksNames.Length - 1 >= trackIndex && trackIndex >= 0)
+                     int trackIndex = EditorGUI.Popup(new Rect(fieldRect.position, new Vector2(EditorGUIUtility.currentViewWidth - fieldRect.x - 50, 20)), tracksNames.ToList().IndexOf(manager.eventCreator[index].selectedTrack), tracksNames);
+                     if (trackIndex >= 0) manager.eventCreator[index].selectedTrack = tracksNames[trackIndex];
+                     else manager.eventCreator[index].selectedTrack = tracksNames[0];
+
+                     Space(ref fieldRect);
+
+                     fieldRect.x = x;
+                     EditorGUI.LabelField(fieldRect, "Auto name");
+
+                     fieldRect.x += 100;
+
+                     manager.eventCreator[index].autoName =
+                         EditorGUI.Toggle(fieldRect, manager.eventCreator[index].autoName);
+
+                     if (manager.eventCreator[index].autoName)
                      {
-                         manager.eventCreator[index].eventName = $"{tracksNames[trackIndex]}Event";
-                         EditorGUI.LabelField(
+                         Space(ref fieldRect);
+
+                         fieldRect.x = x;
+
+                         EditorGUI.LabelField(fieldRect, "Event Name");
+
+                         fieldRect.x += 100;
+
+                         if (tracksNames.Length - 1 >= trackIndex && trackIndex >= 0)
+                         {
+                             manager.eventCreator[index].eventName = $"{tracksNames[trackIndex]}Event";
+                             EditorGUI.LabelField(
+                                 new Rect(fieldRect.position,
+                                     new Vector2(EditorGUIUtility.currentViewWidth - fieldRect.x - 50, 20)),
+                                 manager.eventCreator[index].eventName, new GUIStyle(GUI.skin.box));
+                         }
+                     }
+                     else
+                     {
+                         Space(ref fieldRect);
+
+                         fieldRect.x = x;
+
+                         EditorGUI.LabelField(fieldRect, "Event Name");
+
+                         fieldRect.x += 100;
+
+                         manager.eventCreator[index].eventName = EditorGUI.TextField(
                              new Rect(fieldRect.position,
                                  new Vector2(EditorGUIUtility.currentViewWidth - fieldRect.x - 50, 20)),
-                             manager.eventCreator[index].eventName, new GUIStyle(GUI.skin.box));
+                             manager.eventCreator[index].eventName);
+
                      }
                  }
                  else
                  {
-                     Space(ref fieldRect);
+                     if(!setH_Event) GetEventHeight();
 
                      fieldRect.x = x;
-
-                     EditorGUI.LabelField(fieldRect, "Event Name");
-
-                     fieldRect.x += 100;
-
-                     manager.eventCreator[index].eventName = EditorGUI.TextField(
-                         new Rect(fieldRect.position,
-                             new Vector2(EditorGUIUtility.currentViewWidth - fieldRect.x - 50, 20)),
-                         manager.eventCreator[index].eventName);
-
+                     EditorGUI.LabelField(fieldRect, "You must have any track for use this component".ToUpper(), new GUIStyle(GUI.skin.box));
                  }
-
 
                  Space(ref fieldRect, 40);
 
@@ -443,6 +452,18 @@ public class AudioPlayerEditor : Editor
          }
 
          return matchEvents;
+     }
+
+     void GetEventHeight()
+     {
+         _reorderableEventCreators.elementHeightCallback = delegate(int index) {
+             var element = _reorderableEventCreators.serializedProperty.GetArrayElementAtIndex(index);
+             var margin = EditorGUIUtility.standardVerticalSpacing;
+             if (element.isExpanded) return (AudioManager.Instance.tracks.Count > 0 ? 215 : 150) + margin;
+             else return 20 + margin;
+         };
+
+         setH_Event = !setH_Event;
      }
      
      void DrawHeaderTracks(Rect rect)
@@ -501,7 +522,7 @@ public class AudioPlayerEditor : Editor
      public static void DrawUILine(float posX, float posY, float thickness = 38, float padding = 30)
      {
          Rect r = new Rect(posX, posY, thickness, padding);
-         r.width = EditorGUIUtility.currentViewWidth;
+         r.width = EditorGUIUtility.currentViewWidth - 10;
          r.height = 2;
          r.y+=padding * 0.3f;
          r.x-=70;

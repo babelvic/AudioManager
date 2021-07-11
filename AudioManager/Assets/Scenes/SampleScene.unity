@@ -685,7 +685,145 @@ MonoBehaviour:
   - someEvent
   - otherEvent
   - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
+  - someEvent
+  - otherEvent
+  - noseEvent
   allEventsTypes:
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   - testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -1003,9 +1141,9 @@ MonoBehaviour:
     TypeName: testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   eventCreator:
   - selectedScript: {fileID: 1536678467}
-    selectedTrack: BossFightStart
-    autoName: 0
-    eventName: BossFightStartEvent
+    selectedTrack: BotonPlayHLX
+    autoName: 1
+    eventName: BotonPlayHLXEvent
 --- !u!1 &2098241564
 GameObject:
   m_ObjectHideFlags: 0
@@ -1016,7 +1154,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2098241565}
   - component: {fileID: 2098241567}
-  - component: {fileID: 2098241566}
   m_Layer: 0
   m_Name: AudioManagement
   m_TagString: Untagged
@@ -1038,102 +1175,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &2098241566
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2098241564}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!114 &2098241567
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1148,21 +1189,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   tracks:
-  - name: BossFightStart
-    clip: {fileID: 8300000, guid: 6321f18647e66f54dbf9ed2237c816c4, type: 3}
+  - autoName: 1
+    name: BotonPlay
+    clip: {fileID: 8300000, guid: 28c780b296168144d8ec68261b4e8f25, type: 3}
     mixer: {fileID: -6328668385672608837, guid: f1d81173983f4734dbd3ff9a49579828, type: 2}
-    playOnAwake: 1
-    loop: 1
-    dimensional: 1
+    playOnAwake: 0
+    loop: 0
+    dimensional: 0
     priority: 150
     volume: 1
     pitch: 1
-    spatialBlend: 1
-    objectReference: {fileID: 1536678465}
+    spatialBlend: 0
+    objectReference: {fileID: 0}
     minDistance: 1
     maxDistance: 500
     h_source: {fileID: 0}
-  - name: BotonPlay
+  - autoName: 1
+    name: BotonPlayHLX
     clip: {fileID: 8300000, guid: 28c780b296168144d8ec68261b4e8f25, type: 3}
     mixer: {fileID: -6328668385672608837, guid: f1d81173983f4734dbd3ff9a49579828, type: 2}
     playOnAwake: 0
@@ -1179,10 +1222,10 @@ MonoBehaviour:
   mixers:
   - name: Music
     mixerGroup: {fileID: -6328668385672608837, guid: f1d81173983f4734dbd3ff9a49579828, type: 2}
-    dropdownMixer: 0
+    dropdownMixer: 1
   - name: FX
     mixerGroup: {fileID: 9101494550402916091, guid: f1d81173983f4734dbd3ff9a49579828, type: 2}
-    dropdownMixer: 0
+    dropdownMixer: 1
   mixerGroupPopup:
   - Music
   - FX
