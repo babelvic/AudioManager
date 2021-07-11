@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using AudioEngine;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.VersionControl;
 using UnityEditorInternal;
 
 [CustomEditor(typeof(AudioPlayer))]
@@ -148,6 +150,49 @@ public class AudioPlayerEditor : Editor
                          if (GUILayout.Button("Create"))
                          {
                              //Crea todos los eventos y sus invocaciones
+                             if (manager.eventCreator.Count > 0)
+                             {
+                                 for (int i = 0; i < manager.eventCreator.Count; i++)
+                                 {
+                                     string path = "";
+                                     string[] res = System.IO.Directory.GetFiles(Application.dataPath, $"{manager.eventCreator[i].selectedScript.GetType().Name}.cs", SearchOption.AllDirectories);
+                                     Debug.Log(manager.eventCreator[i].selectedScript);
+                                     if (res.Length != 0)
+                                     {
+                                         path = res[0].Replace("\\", "/");
+                                         Debug.Log(path);
+                                    }
+
+                                    StreamReader scriptReader = new StreamReader(path);
+
+                                     string refScriptReader = scriptReader.ReadToEnd();
+                                     scriptReader.Close();
+
+                                     if (refScriptReader.Contains(manager.eventCreator[i].eventName))
+                                     {
+                                         continue;
+                                     }
+                                     else
+                                     {
+                                         string declaringEvent = $"public event Action<string> {manager.eventCreator[i].eventName};";
+                                         string trackReference = $"\"{manager.eventCreator[i].selectedTrack}\"";
+                                         string invokingEvent = $"{manager.eventCreator[i].eventName}?.Invoke({trackReference})";
+                                         
+                                         //Priemera parte hasta el nombre de la clase
+                                         string s0 = refScriptReader.Split(new string[] {$"{manager.eventCreator[i].selectedScript.GetType().Name}"}, StringSplitOptions.None)[0];
+                                         //El resto
+                                         string s1 = refScriptReader.Split(new string[] {$"{manager.eventCreator[i].selectedScript.GetType().Name}"}, StringSplitOptions.None)[1];
+
+                                         string r = s0 + manager.eventCreator[i].selectedScript.GetType().Name + s1;
+                                         
+                                         Debug.Log(declaringEvent);
+                                         Debug.Log(invokingEvent);
+                                         Debug.Log(s0);
+                                         Debug.Log(s1);
+                                         Debug.Log(r);
+                                     }
+                                 }
+                             }
                          }
                          
                          using (new EditorGUILayout.HorizontalScope())

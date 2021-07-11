@@ -19,7 +19,6 @@ public class testProperty : MonoBehaviour
 
     private void Start()
     {
-
         someEvent?.Invoke("BotonPlay");
     }
 
