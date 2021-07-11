@@ -156,11 +156,10 @@ public class AudioPlayerEditor : Editor
                                  {
                                      string path = "";
                                      string[] res = System.IO.Directory.GetFiles(Application.dataPath, $"{manager.eventCreator[i].selectedScript.GetType().Name}.cs", SearchOption.AllDirectories);
-                                     Debug.Log(manager.eventCreator[i].selectedScript);
                                      if (res.Length != 0)
                                      {
                                          path = res[0].Replace("\\", "/");
-                                         Debug.Log(path);
+                                         //Debug.Log(path);
                                     }
 
                                     StreamReader scriptReader = new StreamReader(path);
@@ -176,20 +175,94 @@ public class AudioPlayerEditor : Editor
                                      {
                                          string declaringEvent = $"public event Action<string> {manager.eventCreator[i].eventName};";
                                          string trackReference = $"\"{manager.eventCreator[i].selectedTrack}\"";
-                                         string invokingEvent = $"{manager.eventCreator[i].eventName}?.Invoke({trackReference})";
+                                         string invokingEvent = $"{manager.eventCreator[i].eventName}?.Invoke({trackReference});";
                                          
-                                         //Priemera parte hasta el nombre de la clase
-                                         string s0 = refScriptReader.Split(new string[] {$"{manager.eventCreator[i].selectedScript.GetType().Name}"}, StringSplitOptions.None)[0];
-                                         //El resto
-                                         string s1 = refScriptReader.Split(new string[] {$"{manager.eventCreator[i].selectedScript.GetType().Name}"}, StringSplitOptions.None)[1];
+                                         if (refScriptReader.Contains("#region EventsRegion"))
+                                         {
+                                             //hasta la region
+                                             string eventFirstPart = refScriptReader.Split(new string[] {"#region EventsRegion"}, StringSplitOptions.None)[0] + manager.eventCreator[i].selectedScript.GetType().Name;
 
-                                         string r = s0 + manager.eventCreator[i].selectedScript.GetType().Name + s1;
-                                         
-                                         Debug.Log(declaringEvent);
-                                         Debug.Log(invokingEvent);
-                                         Debug.Log(s0);
-                                         Debug.Log(s1);
-                                         Debug.Log(r);
+                                             //el resto del script
+                                             string restEventScriptPart = refScriptReader.Split(new string[] {"#region EventsRegion"}, StringSplitOptions.None)[1];
+                                             
+                                             eventFirstPart += $"\n{declaringEvent}";
+
+                                             string eventDeclaredResult = eventFirstPart + restEventScriptPart;
+                                             
+                                             //Find the method and invoke the event
+                                             string methodName = manager.eventCreator[i].selectedMethod.Name;
+                                             string methodFirstPart = eventDeclaredResult.Split(new string[] {$"{methodName}"}, StringSplitOptions.None)[0] + methodName;
+                                             string methodRestPart = eventDeclaredResult.Split(new string[] {$"{methodName}"}, StringSplitOptions.None)[1];
+
+                                             string firstQuoteInMethodPart = methodFirstPart.Split('{')[0] + '{';
+                                             //El resto
+                                             string restQuoteInMethodPart = refScriptReader.Substring(firstQuoteInMethodPart.Length - 1);
+
+                                             firstQuoteInMethodPart += $"\n{invokingEvent}";
+
+                                             string finalScriptResult = firstQuoteInMethodPart + restQuoteInMethodPart;
+                                             
+                                             Debug.Log(finalScriptResult);
+                                         }
+                                         else
+                                         {
+                                             //Priemera parte hasta el nombre de la clase (Añado la clase que se pierde al splitear)
+                                             string s0 = refScriptReader.Split(new string[] {$"{manager.eventCreator[i].selectedScript.GetType().Name}"}, StringSplitOptions.None)[0] + manager.eventCreator[i].selectedScript.GetType().Name;
+                                             Debug.Log("s0:\n" + s0);
+                                             //El resto
+                                             string s1 = refScriptReader.Split(new string[] {$"{manager.eventCreator[i].selectedScript.GetType().Name}"}, StringSplitOptions.None)[1];
+                                             Debug.Log("s1:\n" + s1);
+
+                                             //A partir de la primera llave justo despues de la definicion de la clase
+                                             string t0 = s1.Split('{')[0] + "{";
+                                             Debug.Log("t0:\n" + t0);
+
+                                             //join the first part
+                                             string firstPartToFirstQuotes = s0 + t0;
+                                             Debug.Log("First Part:\n" + firstPartToFirstQuotes);
+                                             
+                                             //El resto
+                                             string t1 = refScriptReader.Substring(firstPartToFirstQuotes.Length);
+                                             Debug.Log("t1:\n" + t1);
+
+                                             // Set at the first { the region for the events
+                                             string regionPart = firstPartToFirstQuotes + "\n#region EventsRegion" + "\n" + "\n#endregion";
+
+                                             string eventSettingPart = regionPart.Split(new string[] {"#region EventsRegion"}, StringSplitOptions.None)[0] + "#region EventsRegion";
+                                             string restEventSettingPart = regionPart.Split(new string[] {"#region EventsRegion"}, StringSplitOptions.None)[1];
+
+                                             eventSettingPart += $"\n{declaringEvent}";
+                                             
+                                             //join the event region
+                                             string eventDeclaredResult = eventSettingPart + restEventSettingPart;
+                                             Debug.Log("EVENT DECLARATION FIRST PART:\n"+eventDeclaredResult);
+
+                                             string scriptRefresh = eventDeclaredResult + t1; 
+                                             Debug.Log("Script Refresh:\n" + scriptRefresh);
+                                             
+                                             //find the method and invoke the event
+                                             string methodName = manager.eventCreator[i].selectedMethod.Name;
+                                             string methodFirstPart = scriptRefresh.Split(new string[] {$"{methodName}"}, StringSplitOptions.None)[0] + methodName;
+                                             Debug.Log("Method First Part:\n" + methodFirstPart);
+                                             string restMethodPart = scriptRefresh.Split(new string[] {$"{methodName}"}, StringSplitOptions.None)[1];
+                                             Debug.Log("Method Rest Part:\n" + restMethodPart);
+                                             
+                                             string firstQuoteInMethodPart = restMethodPart.Split('{')[0] + '{';
+                                             Debug.Log("Method Quote First Part:\n" + firstQuoteInMethodPart);
+
+                                             string firstPartToFirstMethod = methodFirstPart + firstQuoteInMethodPart;
+                                             
+                                             //El resto
+                                             string restQuoteInMethodPart = scriptRefresh.Split(new string[] {firstPartToFirstMethod}, StringSplitOptions.None)[1];
+                                             Debug.Log("Method Rest Quote Part:\n" + restQuoteInMethodPart);
+                                             
+                                             firstPartToFirstMethod += $"\n{invokingEvent}";
+                                             Debug.Log("First Part of the first method:\n" + firstPartToFirstMethod);
+                                             
+                                             string finalScriptResult = firstPartToFirstMethod + restQuoteInMethodPart;
+                                             
+                                             Debug.Log("Resultado Final:\n"+finalScriptResult);
+                                         }
                                      }
                                  }
                              }
