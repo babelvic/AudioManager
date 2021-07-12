@@ -79,7 +79,11 @@ namespace AudioEngine
         {
             if (FindObjectsOfType<AudioManager>().Length > 1)
             {
-                Destroy(this.gameObject);
+                AudioManager[] am = FindObjectsOfType<AudioManager>();
+                for (int i = am.Length-1; i > 0; i--)
+                {
+                    Destroy(am[i]);
+                }
             }
             else
             {

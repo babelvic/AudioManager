@@ -62,7 +62,7 @@ public class AudioPlayerEditor : Editor
          _reorderableEventCreators.elementHeightCallback = delegate(int index) {
              var element = _reorderableEventCreators.serializedProperty.GetArrayElementAtIndex(index);
              var margin = EditorGUIUtility.standardVerticalSpacing;
-             if (element.isExpanded) return 215 + margin;
+             if (element.isExpanded) return 245 + margin;
              else return 20 + margin;
          };
 
@@ -149,62 +149,7 @@ public class AudioPlayerEditor : Editor
                          
                          if (GUILayout.Button("Create"))
                          {
-                             //Crea todos los eventos y sus invocaciones
-                             if (manager.eventCreator.Count > 0)
-                             {
-                                 for (int i = 0; i < manager.eventCreator.Count; i++)
-                                 {
-                                     string path = "";
-                                     string[] res = System.IO.Directory.GetFiles(Application.dataPath, $"{manager.eventCreator[i].selectedScript.GetType().Name}.cs", SearchOption.AllDirectories);
-                                     if (res.Length != 0)
-                                     {
-                                         path = res[0].Replace("\\", "/");
-                                         //Debug.Log(path);
-                                    }
-
-                                    StreamReader scriptReader = new StreamReader(path);
-
-                                     string refScriptReader = scriptReader.ReadToEnd();
-                                     scriptReader.Close();
-
-                                     if (refScriptReader.Contains(manager.eventCreator[i].eventName))
-                                     {
-                                         continue;
-                                     }
-                                     else
-                                     {
-                                         string indent = "    ";
-                                         string indentMethod = indent + indent;
-                                         
-                                         string declaringEvent = indent + $"public event Action<string> {manager.eventCreator[i].eventName};";
-                                         string trackReference = $"\"{manager.eventCreator[i].selectedTrack}\"";
-                                         string invokingEvent = indentMethod + $"{manager.eventCreator[i].eventName}?.Invoke({trackReference});";
-                                         
-                                         if (refScriptReader.Contains("#region EventsRegion"))
-                                         {
-                                             string scriptRefresh = DeclaringInvokeWithRegion(refScriptReader, i, declaringEvent);
-
-                                             string overwriteScript = InvokeInMethod(scriptRefresh, i, invokingEvent);
-                                             Debug.Log(overwriteScript);
-
-                                             StreamWriter scriptOverWriter = new StreamWriter(path);
-                                             scriptOverWriter.Write(overwriteScript);
-                                             scriptOverWriter.Close();
-                                         }
-                                         else
-                                         {
-                                             string scriptRefresh = DeclaringInvokeWithoutRegion(refScriptReader, i, declaringEvent, indent);
-                                             
-                                             string overwriteScript = InvokeInMethod(scriptRefresh, i, invokingEvent);
-                                             Debug.Log(overwriteScript);
-                                             
-                                             StreamWriter scriptOverWriter = new StreamWriter(path);
-                                             scriptOverWriter.Write(overwriteScript);
-                                             scriptOverWriter.Close();
-                                         }
-                                     }
-                                 }
-                             }
+                             if(AudioManager.Instance.tracks.Count > 0) CreateAllEvents();
                          }
                          
                          using (new EditorGUILayout.HorizontalScope())
@@ -247,6 +192,115 @@ public class AudioPlayerEditor : Editor
          serializedObject.ApplyModifiedProperties();
      }
 
+     void CreateAllEvents()
+     {
+         //Crea todos los eventos y sus invocaciones
+         if (manager.eventCreator.Count > 0)
+         {
+             for (int i = 0; i < manager.eventCreator.Count; i++)
+             {
+                 string path = "";
+                 string[] res = System.IO.Directory.GetFiles(Application.dataPath, $"{manager.eventCreator[i].selectedScript.GetType().Name}.cs", SearchOption.AllDirectories);
+                 if (res.Length != 0)
+                 {
+                     path = res[0].Replace("\\", "/");
+                     //Debug.Log(path);
+                }
+
+                StreamReader scriptReader = new StreamReader(path);
+
+                 string refScriptReader = scriptReader.ReadToEnd();
+                 scriptReader.Close();
+
+                 if (refScriptReader.Contains(manager.eventCreator[i].eventName))
+                 {
+                     continue;
+                 }
+                 else
+                 {
+                     string indent = "    ";
+                     string indentMethod = indent + indent;
+                     
+                     string declaringEvent = indent + $"public event Action<string> {manager.eventCreator[i].eventName};";
+                     string trackReference = $"\"{manager.eventCreator[i].selectedTrack}\"";
+                     string invokingEvent = indentMethod + $"{manager.eventCreator[i].eventName}?.Invoke({trackReference});";
+                     
+                     if (refScriptReader.Contains("#region EventsRegion"))
+                     {
+                         string scriptRefresh = DeclaringInvokeWithRegion(refScriptReader, i, declaringEvent);
+
+                         string overwriteScript = InvokeInMethod(scriptRefresh, i, invokingEvent);
+                         Debug.Log(overwriteScript);
+
+                         StreamWriter scriptOverWriter = new StreamWriter(path);
+                         scriptOverWriter.Write(overwriteScript);
+                         scriptOverWriter.Close();
+                     }
+                     else
+                     {
+                         string scriptRefresh = DeclaringInvokeWithoutRegion(refScriptReader, i, declaringEvent, indent);
+                         
+                         string overwriteScript = InvokeInMethod(scriptRefresh, i, invokingEvent);
+                         Debug.Log(overwriteScript);
+                         
+                         StreamWriter scriptOverWriter = new StreamWriter(path);
+                         scriptOverWriter.Write(overwriteScript);
+                         scriptOverWriter.Close();
+                     }
+                 }
+             }
+         }
+     }
+
+     void CreateEvent(int i)
+     {
+         string path = "";
+         string[] res = System.IO.Directory.GetFiles(Application.dataPath, $"{manager.eventCreator[i].selectedScript.GetType().Name}.cs", SearchOption.AllDirectories);
+         if (res.Length != 0)
+         {
+             path = res[0].Replace("\\", "/");
+             //Debug.Log(path);
+         }
+
+         StreamReader scriptReader = new StreamReader(path);
+
+         string refScriptReader = scriptReader.ReadToEnd();
+         scriptReader.Close();
+
+         if (!refScriptReader.Contains(manager.eventCreator[i].eventName))
+         {
+             string indent = "    ";
+             string indentMethod = indent + indent;
+             
+             string declaringEvent = indent + $"public event Action<string> {manager.eventCreator[i].eventName};";
+             string trackReference = $"\"{manager.eventCreator[i].selectedTrack}\"";
+             string invokingEvent = indentMethod + $"{manager.eventCreator[i].eventName}?.Invoke({trackReference});";
+             
+             if (refScriptReader.Contains("#region EventsRegion"))
+             {
+                 string scriptRefresh = DeclaringInvokeWithRegion(refScriptReader, i, declaringEvent);
+
+                 string overwriteScript = InvokeInMethod(scriptRefresh, i, invokingEvent);
+                 Debug.Log(overwriteScript);
+
+                 StreamWriter scriptOverWriter = new StreamWriter(path);
+                 scriptOverWriter.Write(overwriteScript);
+                 scriptOverWriter.Close();
+             }
+             else
+             {
+                 string scriptRefresh = DeclaringInvokeWithoutRegion(refScriptReader, i, declaringEvent, indent);
+                 
+                 string overwriteScript = InvokeInMethod(scriptRefresh, i, invokingEvent);
+                 Debug.Log(overwriteScript);
+                 
+                 StreamWriter scriptOverWriter = new StreamWriter(path);
+                 scriptOverWriter.Write(overwriteScript);
+                 scriptOverWriter.Close();
+             }
+         }
+     }
+
      #region OverwritingScript
      
      string DeclaringInvokeWithRegion(string refScript, int i, string declaringInvoke)
@@ -283,7 +337,7 @@ public class AudioPlayerEditor : Editor
          
 
          // Set at the first { the region for the events
-         string regionPart = firstPartToFirstQuotes + $"\n{indent}#region EventsRegion" + "\n" + $"\n{indent}#endregion";
+         string regionPart = firstPartToFirstQuotes + $"\n{indent}#region EventsRegion" + $"\n\n{indent}#endregion\n";
 
          string eventSettingPart = regionPart.Split(new string[] {"#region EventsRegion"}, StringSplitOptions.None)[0] + "#region EventsRegion";
          string restEventSettingPart = regionPart.Split(new string[] {"#region EventsRegion"}, StringSplitOptions.None)[1];
@@ -322,6 +376,8 @@ public class AudioPlayerEditor : Editor
      
      #endregion
 
+     #region DrawingReorderableLists
+     
      public void DrawAudioEvents(Rect position, int index, bool isActive, bool isFocused)
      {
          SerializedProperty property = _reorderableAudioEvents.serializedProperty.GetArrayElementAtIndex(index);
@@ -538,6 +594,14 @@ public class AudioPlayerEditor : Editor
                      fieldRect.x = x;
                      EditorGUI.LabelField(fieldRect, "You must have any track for use this component".ToUpper(), new GUIStyle(GUI.skin.box));
                  }
+                 
+                 Space(ref fieldRect, 30);
+                 Rect createButtonRect = new Rect(fieldRect.position, new Vector2(EditorGUIUtility.currentViewWidth-70, fieldRect.height));
+                 createButtonRect.x = x - 20;
+                 if (GUI.Button(createButtonRect, "Create Event"))
+                 {
+                     if(AudioManager.Instance.tracks.Count > 0) CreateEvent(index);
+                 }
 
                  Space(ref fieldRect, 40);
 
@@ -552,7 +616,7 @@ public class AudioPlayerEditor : Editor
 
                  fieldRect.x = x + 40;
 
-                 DrawUILine(fieldRect.x, fieldRect.y);
+                 DrawUILine(fieldRect.x, fieldRect.y, manager.eventCreator.Count);
 
                  Space(ref fieldRect);
 
@@ -569,6 +633,8 @@ public class AudioPlayerEditor : Editor
              }
          }
      }
+     
+     #endregion
 
      List<EventInfo> GetMatchEvents(List<MonoBehaviour> scripts)
      {
@@ -591,7 +657,7 @@ public class AudioPlayerEditor : Editor
          _reorderableEventCreators.elementHeightCallback = delegate(int index) {
              var element = _reorderableEventCreators.serializedProperty.GetArrayElementAtIndex(index);
              var margin = EditorGUIUtility.standardVerticalSpacing;
-             if (element.isExpanded) return (AudioManager.Instance.tracks.Count > 0 ? 215 : 150) + margin;
+             if (element.isExpanded) return (AudioManager.Instance.tracks.Count > 0 ? 245 : 185) + margin;
              else return 20 + margin;
          };
 
@@ -651,10 +717,10 @@ public class AudioPlayerEditor : Editor
          pos.y += space;
      }
      
-     public static void DrawUILine(float posX, float posY, float thickness = 38, float padding = 30)
+     public static void DrawUILine(float posX, float posY, int actualEvents = 0, float thickness = 38, float padding = 30)
      {
          Rect r = new Rect(posX, posY, thickness, padding);
-         r.width = EditorGUIUtility.currentViewWidth - 10;
+         r.width = EditorGUIUtility.currentViewWidth - (actualEvents > 1 ? 21 : 10);
          r.height = 2;
          r.y+=padding * 0.3f;
          r.x-=70;

@@ -10,30 +10,24 @@ public class testProperty : MonoBehaviour
 {
     #region EventsRegion
 
-    public event Action<string> BotonPlayOFGEvent;
-    public event Action<string> BotonPlayEvent;
+    public event Action<string> LaserShootIAIEvent;
+    public event Action<string> LaserShootEvent;
 
     #endregion
 
     public List<AudioManager.AudioTrack> test1;
 
-    public event Action<string> someEvent;
-    public event Action<string> otherEvent;
-    public event Action<string> noseEvent;
-    public event Action noEvent;
-
     private string x;
 
     private void Start()
     {
-        BotonPlayOFGEvent?.Invoke("BotonPlayOFG");
-        BotonPlayEvent?.Invoke("BotonPlay");
-        someEvent?.Invoke("BotonPlay");
+        LaserShootIAIEvent?.Invoke("LaserShootIAI");
+        LaserShootEvent?.Invoke("LaserShoot");
+        
     }
 
     public void testMethod()
     {
-        
     }
 
 }
