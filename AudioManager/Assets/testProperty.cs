@@ -8,6 +8,13 @@ using UnityEngine.SocialPlatforms;
 
 public class testProperty : MonoBehaviour
 {
+    #region EventsRegion
+
+    public event Action<string> BotonPlayOFGEvent;
+    public event Action<string> BotonPlayEvent;
+
+    #endregion
+
     public List<AudioManager.AudioTrack> test1;
 
     public event Action<string> someEvent;
@@ -19,6 +26,8 @@ public class testProperty : MonoBehaviour
 
     private void Start()
     {
+        BotonPlayOFGEvent?.Invoke("BotonPlayOFG");
+        BotonPlayEvent?.Invoke("BotonPlay");
         someEvent?.Invoke("BotonPlay");
     }
 
