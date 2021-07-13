@@ -379,6 +379,11 @@ MonoBehaviour:
     autoName: 1
     eventName: LaserShootEvent
     eventType: testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - selectedScript: {fileID: 1536678467}
+    selectedTrack: LaserShoot
+    autoName: 1
+    eventName: LaserShootEvent
+    eventType: testProperty, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!114 &1536678470
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -20,7 +20,7 @@ namespace AudioEngine
             {
                 if (_instance == null)
                 {
-                    _instance = FindObjectOfType<AudioManager>();
+                    _instance = FindObjectsOfType<AudioManager>().FirstOrDefault();
                 }
 
                 return _instance;
@@ -77,18 +77,14 @@ namespace AudioEngine
 
         private void Awake()
         {
-            if (FindObjectsOfType<AudioManager>().Length > 1)
+            // if the singleton hasn't been initialized yet
+            if (_instance != null && _instance != this)
             {
-                AudioManager[] am = FindObjectsOfType<AudioManager>();
-                for (int i = am.Length-1; i > 0; i--)
-                {
-                    Destroy(am[i]);
-                }
+                Destroy(this.gameObject);
             }
-            else
-            {
-                DontDestroyOnLoad(this.gameObject);
-            }
+
+            _instance = this;
+            DontDestroyOnLoad(this.gameObject);
 
             //Set the audio
             SetAudioInScene();

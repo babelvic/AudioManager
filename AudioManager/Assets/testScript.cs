@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class testScript : MonoBehaviour
 {
-    public event Action<string> someEvent; 
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,6 +16,9 @@ public class testScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            SceneManager.LoadScene(0);
+        }
     }
 }
