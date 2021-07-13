@@ -12,11 +12,12 @@ public class AudioPlayer : MonoBehaviour
 {
     public bool selectAllEvents;
     public bool configuration;
-    public bool manually;
+    public bool automatic;
     
     //All events
     public List<string> allEventsNames;
     public List<string> allEventsTypes;
+    public bool allEventsSetted;
     
     //Each event
     public List<AudioEvent> audioEvent;
@@ -33,11 +34,14 @@ public class AudioPlayer : MonoBehaviour
 
         public bool autoName = true;
         public string eventName;
+
+        public string eventType;
     }
 
     [System.Serializable]
     public class AudioEvent
     {
+        public int eventIndex;
         public string SelectedEventName;
         public string TypeName;
     }
@@ -45,33 +49,57 @@ public class AudioPlayer : MonoBehaviour
 
     private void Awake()
     {
-        if (selectAllEvents)
+        if (automatic)
         {
-            //Subscribe all the events with a string as parameter by using a list of events info
-            for (var i = 0; i < allEventsNames.Count; i++)
+            foreach (var ae in eventCreator)
             {
-                Type type = Type.GetType(allEventsTypes[i]);
-                EventInfo sEvent = type.GetEvent(allEventsNames[i]);
+                //Debug.Log(ae.eventName + " /// " + ae.eventType);
+                if (ae.eventType != string.Empty)
+                {
+                    //Debug.Log(ae.eventType);
+                    Type type = Type.GetType(ae.eventType);
+                    EventInfo SelectedEvent = type.GetEvent(ae.eventName);
 
-                Component selectedComponent = GetComponent(type);
-                
-                Delegate handler = Delegate.CreateDelegate(sEvent.EventHandlerType, AudioManager.Instance, typeof(AudioManager).GetMethod("PlayTrack"));
-                sEvent.AddEventHandler(selectedComponent, handler);
+                    Component selectedComponent = GetComponent(type);
+
+                    Delegate handler = Delegate.CreateDelegate(SelectedEvent.EventHandlerType, AudioManager.Instance , typeof(AudioManager).GetMethod("PlayTrack"));
+                    SelectedEvent.AddEventHandler(selectedComponent, handler);
+                }
             }
         }
         else
         {
-            //Subscribe by selecting each event that you want to subscribe it
-            foreach (var ae in audioEvent)
+            if (selectAllEvents)
             {
-                Type type = Type.GetType(ae.TypeName);
-                EventInfo SelectedEvent = type.GetEvent(ae.SelectedEventName);
+                //Subscribe all the events with a string as parameter by using a list of events info
+                for (var i = 0; i < allEventsNames.Count; i++)
+                {
+                    Type type = Type.GetType(allEventsTypes[i]);
+                    EventInfo sEvent = type.GetEvent(allEventsNames[i]);
 
-                Component selectedComponent = GetComponent(type);
+                    Component selectedComponent = GetComponent(type);
+                    
+                    //Debug.Log(type + " | " + allEventsTypes[i]);
 
-                Delegate handler = Delegate.CreateDelegate(SelectedEvent.EventHandlerType, AudioManager.Instance , typeof(AudioManager).GetMethod("PlayTrack"));
-                SelectedEvent.AddEventHandler(selectedComponent, handler);
+                    Delegate handler = Delegate.CreateDelegate(sEvent.EventHandlerType, AudioManager.Instance , typeof(AudioManager).GetMethod("PlayTrack"));
+                    sEvent.AddEventHandler(selectedComponent, handler);
+                }
+            }
+            else
+            {
+                //Subscribe by selecting each event that you want to subscribe it
+                foreach (var ae in audioEvent)
+                {
+                    Type type = Type.GetType(ae.TypeName);
+                    EventInfo SelectedEvent = type.GetEvent(ae.SelectedEventName);
+
+                    Component selectedComponent = GetComponent(type);
+
+                    Delegate handler = Delegate.CreateDelegate(SelectedEvent.EventHandlerType, AudioManager.Instance , typeof(AudioManager).GetMethod("PlayTrack"));
+                    SelectedEvent.AddEventHandler(selectedComponent, handler);
+                }
             }
         }
+        
     }
 }

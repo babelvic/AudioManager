@@ -67,6 +67,8 @@ public class AudioPlayerEditor : Editor
          };
 
          #endregion
+         
+         manager.allEventsSetted = false;
      }
 
      public override void OnInspectorGUI()
@@ -88,7 +90,7 @@ public class AudioPlayerEditor : Editor
              
              if (!manager.configuration)
              {
-                 if (!manager.manually)
+                 if (!manager.automatic)
                  {
                      using (new EditorGUILayout.HorizontalScope("Box"))
                      {
@@ -107,10 +109,18 @@ public class AudioPlayerEditor : Editor
 
                          List<EventInfo> matchEvents = GetMatchEvents(scripts);
 
-                         foreach (var mEvent in matchEvents)
+                         if (!manager.allEventsSetted)
                          {
-                             manager.allEventsNames.Add(mEvent.Name);
-                             manager.allEventsTypes.Add(mEvent.DeclaringType.AssemblyQualifiedName);
+                             manager.allEventsNames.Clear();
+                             manager.allEventsTypes.Clear();
+                         
+                             foreach (var mEvent in matchEvents)
+                             {
+                                 manager.allEventsNames.Add(mEvent.Name);
+                                 manager.allEventsTypes.Add(mEvent.DeclaringType.AssemblyQualifiedName);
+                             }
+
+                             manager.allEventsSetted = true;
                          }
 
                          using (new EditorGUILayout.VerticalScope("Box"))
@@ -149,7 +159,18 @@ public class AudioPlayerEditor : Editor
                          
                          if (GUILayout.Button("Create"))
                          {
-                             if(AudioManager.Instance.tracks.Count > 0) CreateAllEvents();
+                             if (AudioManager.Instance.tracks.Count > 0)
+                             {
+                                 CreateAllEvents();
+
+                                 for (int i = 0; i < manager.eventCreator.Count; i++)
+                                 {
+                                     //Set the type of the event for subscribing it later
+                                     EventInfo ev = manager.eventCreator[i].selectedScript.GetType().GetEvent(manager.eventCreator[i].eventName);
+                                     Debug.Log("Event: " + ev.Name + " | " + ev.DeclaringType.AssemblyQualifiedName);
+                                     if(ev != null) manager.eventCreator[i].eventType = ev.DeclaringType.AssemblyQualifiedName;
+                                 }
+                             }
                          }
                          
                          using (new EditorGUILayout.HorizontalScope())
@@ -177,11 +198,11 @@ public class AudioPlayerEditor : Editor
              {
                  using (new EditorGUILayout.HorizontalScope("Box"))
                  {
-                     EditorGUILayout.LabelField("Manually Invoking");
+                     EditorGUILayout.LabelField("Automatic Invoking");
                  
                      EditorGUILayout.Space();
                  
-                     manager.manually = EditorGUILayout.Toggle(manager.manually);
+                     manager.automatic = EditorGUILayout.Toggle(manager.automatic);
              
                      EditorGUILayout.Space();
                  }
@@ -413,13 +434,20 @@ public class AudioPlayerEditor : Editor
                      {
                          string[] methodNames = matchEvents.Select(e => $"{e.DeclaringType} / {e.Name}()").ToArray();
                      
-                         int methodIndex = EditorGUI.Popup(fieldRect, "Event Player", index, methodNames);
-                         if (methodIndex >= 0)
+                         manager.audioEvent[index].eventIndex = EditorGUI.Popup(fieldRect, "Event Player", manager.audioEvent[index].eventIndex, methodNames);
+                         if (manager.audioEvent[index].eventIndex >= 0)
                          {
-                             manager.audioEvent[index].TypeName = matchEvents[methodIndex].DeclaringType.AssemblyQualifiedName;
-                             manager.audioEvent[index].SelectedEventName = matchEvents[methodIndex].Name;
+                             //Debug.Log(manager.audioEvent[index].eventIndex);
+                             manager.audioEvent[index].TypeName = matchEvents[manager.audioEvent[index].eventIndex].DeclaringType.AssemblyQualifiedName;
+                             manager.audioEvent[index].SelectedEventName = matchEvents[manager.audioEvent[index].eventIndex].Name;
                          }
-                         else manager.audioEvent[index].SelectedEventName = matchEvents[0].Name;
+                         else
+                         {
+                             manager.audioEvent[index].SelectedEventName = matchEvents[0].Name;
+                             manager.audioEvent[index].TypeName = matchEvents[0].DeclaringType.AssemblyQualifiedName;
+                         }
+                         
+                         
                      }
                      
                      Space(ref fieldRect, 40);
@@ -600,7 +628,15 @@ public class AudioPlayerEditor : Editor
                  createButtonRect.x = x - 20;
                  if (GUI.Button(createButtonRect, "Create Event"))
                  {
-                     if(AudioManager.Instance.tracks.Count > 0) CreateEvent(index);
+                     if (AudioManager.Instance.tracks.Count > 0)
+                     {
+                         CreateEvent(index);
+                         
+                         //Set the type of the event for subscribing it later
+                         EventInfo ev = manager.eventCreator[index].selectedScript.GetType().GetEvent(manager.eventCreator[index].eventName);
+                         Debug.Log("Event: " + ev.Name + " | " + ev.DeclaringType.AssemblyQualifiedName);
+                         if(ev != null) manager.eventCreator[index].eventType = ev.DeclaringType.AssemblyQualifiedName;
+                     }
                  }
 
                  Space(ref fieldRect, 40);

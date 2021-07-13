@@ -11,8 +11,9 @@ public class testProperty : MonoBehaviour
     #region EventsRegion
 
     public event Action<string> LaserShootIAIEvent;
-    public event Action<string> LaserShootEvent;
 
+    public event Action<string> LaserShootEvent;
+    
     #endregion
 
     public List<AudioManager.AudioTrack> test1;
@@ -28,6 +29,7 @@ public class testProperty : MonoBehaviour
 
     public void testMethod()
     {
+        
     }
 
 }
