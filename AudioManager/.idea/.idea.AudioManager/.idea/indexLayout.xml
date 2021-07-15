@@ -12,7 +12,6 @@
       <Path>Library/PackageCache/com.unity.test-framework@1.1.20</Path>
       <Path>Library/PackageCache/com.unity.textmeshpro@3.0.1</Path>
       <Path>Library/PackageCache/com.unity.timeline@1.4.5</Path>
-      <Path>Packages</Path>
       <Path>ProjectSettings</Path>
     </explicitIncludes>
     <explicitExcludes>

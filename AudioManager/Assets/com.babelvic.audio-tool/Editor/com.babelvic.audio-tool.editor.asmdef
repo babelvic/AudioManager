@@ -1,0 +1,16 @@
+{
+    "name": "com.babelvic.editor.audio-tool",
+    "rootNamespace": "",
+    "references": [
+        "GUID:abdf3d0131d88dc4aa74cb655eb521f3"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
