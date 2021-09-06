@@ -186,6 +186,14 @@ invoked).
 
         ![Audio Manager](Resources/18.png)
 
+        - If you want to use that event for play the sound you have to write the name + PlayEvent or leave it by default with any name.
+
+            ![Audio Manager](Resources/1.1_1.png)
+
+        - If you want to use it for stop the track, write the name + StopEvent.
+
+            ![Audio Manager](Resources/1.1_2.png)
+
         **Notice that you need the system namespace for declare events**
 
         - Then you can return to the AudioPlayer component and select 
@@ -259,6 +267,12 @@ unchecking the Auto name field.
 
     ![Audio Manager](Resources/28.png)
 
+    For this tutorial we are going to create one event with the play mode and another with the stop mode. 
+
+    ![Audio Manager](Resources/1.1_3.png)
+
+    We are going to create the stop event in the asss method for test it later.
+
 You can now create this event by using the Create Event button which 
 creates the actual event, or the Create button which creates all the events 
 of the list.
@@ -300,6 +314,8 @@ Don’t destroy on load because of the singleton pattern.
 
 ![Audio Manager](Resources/33.png)
 
+Also take a look at some examples of 2d and 3d configurations:
+
 The sources with 2D configuration.
 
 ![Audio Manager](Resources/34.png)
@@ -308,28 +324,26 @@ The sources with 3D configuration at the object referenced.
 
 ![Audio Manager](Resources/35.png)
 
-Another incredible feature of the automatic event creation is that you can 
-have a method with parameters or with invocations or with comments with 
-the same name before the method, but the component will find the method 
-anyways.
+Now we are going to test the stop event, so write the next code in the update method of the testEventCreator script:
 
-Like in that case:
+``` C#
+void Update ()
+{
+    if (Input.GetKeyDown(KeyCode.Return))
+    {
+       asss();
+    }
 
-![Audio Manager](Resources/36.png)
+}
+```
 
-For the test, we are going to create the other events of the Fx sounds 
-at the asss method of the same testEventCreator script.
+Like that:
 
-![Audio Manager](Resources/37.png)
+![Audio Manager](Resources/1.1_4.png)
+ 
+With that done, now we can call the stop event of the asss function, so please, replay the game and test it by pressing the Intro of the keyboard. 
 
-Test the Create button, it would create only the events that don’t
-already exist at the selected script. As you can see all the events are 
-created correctly.
+As you can see the sound stops perfectly.
 
-![Audio Manager](Resources/38.png)
-
-And subscribe them all too with the Subscribe button.
-
-![Audio Manager](Resources/39.png)
 
 That's all for now, now enjoy the tool :)
